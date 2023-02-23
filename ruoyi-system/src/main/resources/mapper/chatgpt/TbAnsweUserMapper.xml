@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatgpt.mapper.TbAnsweUserMapper">
+
+    <resultMap type="TbAnsweUser" id="TbAnsweUserResult">
+        <result property="answeUserId"    column="answe_user_id"    />
+        <result property="answeUserOpenid"    column="answe_user_openid"    />
+        <result property="answeUserPhone"    column="answe_user_phone"    />
+        <result property="answeUserName"    column="answe_user_name"    />
+        <result property="answeUserAvatar"    column="answe_user_avatar"    />
+        <result property="answeUserJson"    column="answe_user_json"    />
+        <result property="answeUserNum"    column="answe_user_num"    />
+        <result property="answeUserBlanceNum"    column="answe_user_blance_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbAnsweUserVo">
+        select answe_user_id, answe_user_openid, answe_user_phone, answe_user_name, answe_user_avatar, answe_user_json, answe_user_num, answe_user_blance_num, create_by, create_time, update_by, update_time, remark from tb_answe_user
+    </sql>
+
+    <select id="selectTbAnsweUserList" parameterType="TbAnsweUser" resultMap="TbAnsweUserResult">
+        <include refid="selectTbAnsweUserVo"/>
+        <where>
+            <if test="answeUserOpenid != null  and answeUserOpenid != ''"> and answe_user_openid = #{answeUserOpenid}</if>
+            <if test="answeUserPhone != null  and answeUserPhone != ''"> and answe_user_phone = #{answeUserPhone}</if>
+            <if test="answeUserName != null  and answeUserName != ''"> and answe_user_name like concat('%', #{answeUserName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectTbAnsweUserByAnsweUserId" parameterType="Long" resultMap="TbAnsweUserResult">
+        <include refid="selectTbAnsweUserVo"/>
+        where answe_user_id = #{answeUserId}
+    </select>
+
+    <insert id="insertTbAnsweUser" parameterType="TbAnsweUser" useGeneratedKeys="true" keyProperty="answeUserId">
+        insert into tb_answe_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="answeUserOpenid != null and answeUserOpenid != ''">answe_user_openid,</if>
+            <if test="answeUserPhone != null">answe_user_phone,</if>
+            <if test="answeUserName != null">answe_user_name,</if>
+            <if test="answeUserAvatar != null">answe_user_avatar,</if>
+            <if test="answeUserJson != null">answe_user_json,</if>
+            <if test="answeUserNum != null">answe_user_num,</if>
+            <if test="answeUserBlanceNum != null">answe_user_blance_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="answeUserOpenid != null and answeUserOpenid != ''">#{answeUserOpenid},</if>
+            <if test="answeUserPhone != null">#{answeUserPhone},</if>
+            <if test="answeUserName != null">#{answeUserName},</if>
+            <if test="answeUserAvatar != null">#{answeUserAvatar},</if>
+            <if test="answeUserJson != null">#{answeUserJson},</if>
+            <if test="answeUserNum != null">#{answeUserNum},</if>
+            <if test="answeUserBlanceNum != null">#{answeUserBlanceNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbAnsweUser" parameterType="TbAnsweUser">
+        update tb_answe_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="answeUserOpenid != null and answeUserOpenid != ''">answe_user_openid = #{answeUserOpenid},</if>
+            <if test="answeUserPhone != null">answe_user_phone = #{answeUserPhone},</if>
+            <if test="answeUserName != null">answe_user_name = #{answeUserName},</if>
+            <if test="answeUserAvatar != null">answe_user_avatar = #{answeUserAvatar},</if>
+            <if test="answeUserJson != null">answe_user_json = #{answeUserJson},</if>
+            <if test="answeUserNum != null">answe_user_num = #{answeUserNum},</if>
+            <if test="answeUserBlanceNum != null">answe_user_blance_num = #{answeUserBlanceNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where answe_user_id = #{answeUserId}
+    </update>
+
+    <delete id="deleteTbAnsweUserByAnsweUserId" parameterType="Long">
+        delete from tb_answe_user where answe_user_id = #{answeUserId}
+    </delete>
+
+    <delete id="deleteTbAnsweUserByAnsweUserIds" parameterType="String">
+        delete from tb_answe_user where answe_user_id in
+        <foreach item="answeUserId" collection="array" open="(" separator="," close=")">
+            #{answeUserId}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectTbAnsweUserListsys" parameterType="TbAnsweUser" resultMap="TbAnsweUserResult">
+        <include refid="selectTbAnsweUserVo"/>
+        <where>
+                        <if test="answeUserOpenid != null  and answeUserOpenid != ''"> and answe_user_openid = #{answeUserOpenid}</if>
+                        <if test="answeUserPhone != null  and answeUserPhone != ''"> and answe_user_phone = #{answeUserPhone}</if>
+                        <if test="answeUserName != null  and answeUserName != ''"> and answe_user_name like concat('%', #{answeUserName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectTbAnsweUserByAnsweUserIdsys" parameterType="Long" resultMap="TbAnsweUserResult">
+            <include refid="selectTbAnsweUserVo"/>
+            where answe_user_id = #{answeUserId}
+    </select>
+
+    <select id="selectTbAnsweUserByOpenId" parameterType="String" resultMap="TbAnsweUserResult">
+        <include refid="selectTbAnsweUserVo"/>
+        where answe_user_openid = #{answeUserOpenid}
+    </select>
+
+
+
+    <insert id="insertTbAnsweUsersys" parameterType="TbAnsweUser" useGeneratedKeys="true" keyProperty="answeUserId">
+        insert into tb_answe_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="answeUserOpenid != null and answeUserOpenid != ''">answe_user_openid,</if>
+                    <if test="answeUserPhone != null">answe_user_phone,</if>
+                    <if test="answeUserName != null">answe_user_name,</if>
+                    <if test="answeUserAvatar != null">answe_user_avatar,</if>
+                    <if test="answeUserJson != null">answe_user_json,</if>
+                    <if test="answeUserNum != null">answe_user_num,</if>
+                    <if test="answeUserBlanceNum != null">answe_user_blance_num,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="answeUserOpenid != null and answeUserOpenid != ''">#{answeUserOpenid},</if>
+                    <if test="answeUserPhone != null">#{answeUserPhone},</if>
+                    <if test="answeUserName != null">#{answeUserName},</if>
+                    <if test="answeUserAvatar != null">#{answeUserAvatar},</if>
+                    <if test="answeUserJson != null">#{answeUserJson},</if>
+                    <if test="answeUserNum != null">#{answeUserNum},</if>
+                    <if test="answeUserBlanceNum != null">#{answeUserBlanceNum},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbAnsweUsersys" parameterType="TbAnsweUser">
+        update tb_answe_user
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="answeUserOpenid != null and answeUserOpenid != ''">answe_user_openid = #{answeUserOpenid},</if>
+                    <if test="answeUserPhone != null">answe_user_phone = #{answeUserPhone},</if>
+                    <if test="answeUserName != null">answe_user_name = #{answeUserName},</if>
+                    <if test="answeUserAvatar != null">answe_user_avatar = #{answeUserAvatar},</if>
+                    <if test="answeUserJson != null">answe_user_json = #{answeUserJson},</if>
+                    <if test="answeUserNum != null">answe_user_num = #{answeUserNum},</if>
+                    <if test="answeUserBlanceNum != null">answe_user_blance_num = #{answeUserBlanceNum},</if>
+                    <if test="createBy != null">create_by = #{createBy},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where answe_user_id = #{answeUserId}
+    </update>
+
+    <delete id="deleteTbAnsweUserByAnsweUserIdsys" parameterType="Long">
+        delete from tb_answe_user where answe_user_id = #{answeUserId}
+    </delete>
+
+
+
+    <delete id="deleteTbAnsweUserByAnsweUserIdssys" parameterType="String">
+        delete from tb_answe_user where answe_user_id in
+        <foreach item="answeUserId" collection="array" open="(" separator="," close=")">
+            #{answeUserId}
+        </foreach>
+    </delete>
+
+
+
+
+
+</mapper>
