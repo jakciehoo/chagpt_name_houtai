@@ -25,7 +25,11 @@ QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://
 
 
 ## 小程序演示
-
+<table>
+    <tr>
+        <td><img src="https://image.hongchiqingyun.com/gh_35c30216652f_258.jpg"/></td>
+    </tr>
+</table>
 
 <table>
     <tr>
