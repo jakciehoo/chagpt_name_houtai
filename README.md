@@ -19,6 +19,9 @@
 * 首先后端源码下载下来，用idea源码编辑器打开,只需要修改配置文件中的数据库信息（ruoyi-admin/src/main/resources/application-druid.yml）,如果redis设置了密码需要一同改掉
 * 然后直接启动项目即可(有任何我问题可以加入下方QQ群一起交流)
 
+###  **_教程视频_**  : [B站视频教程-小白可搭建](https://space.bilibili.com/342298458/channel/seriesdetail?sid=3077994&ctype=0)
+
+
 1.服务器配置
 
 centos7.9
