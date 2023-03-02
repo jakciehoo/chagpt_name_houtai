@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.ruoyi.common.core.domain.AjaxResult.error;
@@ -48,7 +46,7 @@ public class chatGtpController {
         //是否检查
         String is_check_ask = iSysConfigService.selectConfigByKey("is_check_ask");
         if (StrUtil.isBlank(aivo.getPrompt())){
-          return   error("输入内容为空");
+            return   error("输入内容为空");
         }
 
         if (StrUtil.equals(is_check_ask,"1")){
@@ -85,13 +83,22 @@ public class chatGtpController {
 //            ajaxResult.get
                 String apikey =(String)ajaxResult.get("data");
                 //请求URL
-                String  url = "https://api.openai.com/v1/completions";
-                String [] a = new String[]{"\n"};
+
+
+                String  url = "https://api.openai.com/v1/chat/completions";
+
+                Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
+                gpt35TurboVO.setRole("user");
+                gpt35TurboVO.setContent(aivo.getPrompt());
+                List<Gpt35TurboVO> objects = new ArrayList<>();
+                objects.add(gpt35TurboVO);
                 Map<Object, Object> objectObjectHashMap = new HashMap<>();
-                objectObjectHashMap.put("model","text-davinci-003");
-                objectObjectHashMap.put("prompt",aivo.getPrompt());
-                objectObjectHashMap.put("max_tokens",2048);
+                objectObjectHashMap.put("model","gpt-3.5-turbo");
+                objectObjectHashMap.put("messages",objects);
                 String postData = JSONUtil.toJsonStr(objectObjectHashMap);
+
+
+
                 body = HttpRequest.post(url)
                         .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
                         .header("Content-Type","application/json")
@@ -114,11 +121,12 @@ public class chatGtpController {
                 redisTemplate.delete("apikey");
                 officalGetDataAsk();
                 return error("请重新发送");
-            }else if (StrUtil.equals(JsonUtil.parseMiddleData(body, "model"),"text-davinci-003")){
+            }else if (StrUtil.contains(JsonUtil.parseMiddleData(body, "model"),"gpt-3.5-turbo")){
                 try {
                     String code = JsonUtil.parseMiddleData(body, "choices");
                     JSONArray jsonArray = JSONUtil.parseArray(code);
-                    body = jsonArray.getJSONObject(0).getStr("text");
+                    body = jsonArray.getJSONObject(0).getStr("message");
+                    body = JsonUtil.parseMiddleData(body, "content");
 //                    body = JsonUtil.parseMiddleData(code, "text");
                 }catch (Exception e){
                     return error("请重新请求");
@@ -269,33 +277,39 @@ public class chatGtpController {
         //获取数据方式:1表示获取官方数据,2获取接口转发数据
         String get_data_type = iSysConfigService.selectConfigByKey("get_data_type");
         try {
-        if (StrUtil.equals(get_data_type,"2")){
-            //暂无逻辑
-        }else {
-            AjaxResult ajaxResult = officalGetData(tbAnsweUser);
-            Integer codeR =(Integer)ajaxResult.get("code");
-            if (codeR!=200){
-                redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
-                return ajaxResult;
-            }
+            if (StrUtil.equals(get_data_type,"2")){
+                //暂无逻辑
+            }else {
+                AjaxResult ajaxResult = officalGetData(tbAnsweUser);
+                Integer codeR =(Integer)ajaxResult.get("code");
+                if (codeR!=200){
+                    redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
+                    return ajaxResult;
+                }
 //            ajaxResult.get
-            String apikey =(String)ajaxResult.get("data");
-            //请求URL
-            String  url = "https://api.openai.com/v1/completions";
-            String [] a = new String[]{"\n"};
-            Map<Object, Object> objectObjectHashMap = new HashMap<>();
-            objectObjectHashMap.put("model","text-davinci-003");
-            objectObjectHashMap.put("prompt",tbAnsweUser.getPrompt());
-            objectObjectHashMap.put("max_tokens",2048);
-            String postData = JSONUtil.toJsonStr(objectObjectHashMap);
+                String apikey =(String)ajaxResult.get("data");
 
-            body = HttpRequest.post(url)
-                    .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
-                    .header("Content-Type","application/json")
-                    .body(postData)//表单内容
-                    .timeout(200000)//超时，毫秒
-                    .execute().body();
-        }
+
+                String  url = "https://api.openai.com/v1/chat/completions";
+
+                Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
+                gpt35TurboVO.setRole("user");
+                gpt35TurboVO.setContent(tbAnsweUser.getPrompt());
+                List<Gpt35TurboVO> objects = new ArrayList<>();
+                objects.add(gpt35TurboVO);
+                Map<Object, Object> objectObjectHashMap = new HashMap<>();
+                objectObjectHashMap.put("model","gpt-3.5-turbo");
+                objectObjectHashMap.put("messages",objects);
+                String postData = JSONUtil.toJsonStr(objectObjectHashMap);
+
+
+                body = HttpRequest.post(url)
+                        .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
+                        .header("Content-Type","application/json")
+                        .body(postData)//表单内容
+                        .timeout(200000)//超时，毫秒
+                        .execute().body();
+            }
         }catch (Exception e){
             redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
             return error("请求错误");
@@ -312,12 +326,12 @@ public class chatGtpController {
                 officalGetData(tbAnsweUser);
                 redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
                 return error("请重新发送");
-            }else if (StrUtil.equals(JsonUtil.parseMiddleData(body, "model"),"text-davinci-003")){
+            }else if (StrUtil.contains(JsonUtil.parseMiddleData(body, "model"),"gpt-3.5-turbo")){
                 try {
                     String code = JsonUtil.parseMiddleData(body, "choices");
                     JSONArray jsonArray = JSONUtil.parseArray(code);
-                    body = jsonArray.getJSONObject(0).getStr("text");
-//                    body = JsonUtil.parseMiddleData(code, "text");
+                    body = jsonArray.getJSONObject(0).getStr("message");
+                    body = JsonUtil.parseMiddleData(body, "content");
                 }catch (Exception e){
                     redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
                     return error("请重新请求");
@@ -450,43 +464,22 @@ public class chatGtpController {
         }
         return success(apikey);
     }
-   public void changeKey(TbAnsweUser tbAnsweUser){
-       Object apikey = redisTemplate.opsForValue().get("apikey");
-       String input = "你好";
-       //请求URL
-       String  url = "https://api.openai.com/v1/completions";
-
-       String [] a = new String[]{"\n"};
-       Map<Object, Object> objectObjectHashMap = new HashMap<>();
-       objectObjectHashMap.put("model","text-davinci-003");
-       objectObjectHashMap.put("prompt",input);
-       objectObjectHashMap.put("max_tokens",2048);
-       String postData = JSONUtil.toJsonStr(objectObjectHashMap);
-       String result2 = HttpRequest.post(url)
-               .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
-               .header("Content-Type","application/json")
-               .body(postData)//表单内容
-               .timeout(200000)//超时，毫秒
-               .execute().body();
-       if (StrUtil.isNotBlank(result2)){
-           String error = JsonUtil.parseMiddleData(result2, "error");
-           String type = JsonUtil.parseMiddleData(error, "type");
-           if (StrUtil.equals(type,"insufficient_quota")){
-               officalGetData(tbAnsweUser);
-           }
-       }
-    }
-    public void changeKeyAsk(){
+    public void changeKey(TbAnsweUser tbAnsweUser){
         Object apikey = redisTemplate.opsForValue().get("apikey");
         String input = "你好";
         //请求URL
-        String  url = "https://api.openai.com/v1/completions";
+        //请求URL
+        String  url = "https://api.openai.com/v1/chat/completions";
 
-        String [] a = new String[]{"\n"};
+        Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
+        gpt35TurboVO.setRole("user");
+        gpt35TurboVO.setContent(input);
+        List<Gpt35TurboVO> objects = new ArrayList<>();
+        objects.add(gpt35TurboVO);
+
         Map<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("model","text-davinci-003");
-        objectObjectHashMap.put("prompt",input);
-        objectObjectHashMap.put("max_tokens",2048);
+        objectObjectHashMap.put("model","gpt-3.5-turbo");
+        objectObjectHashMap.put("messages",objects);
         String postData = JSONUtil.toJsonStr(objectObjectHashMap);
         String result2 = HttpRequest.post(url)
                 .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
@@ -498,6 +491,38 @@ public class chatGtpController {
             String error = JsonUtil.parseMiddleData(result2, "error");
             String type = JsonUtil.parseMiddleData(error, "type");
             if (StrUtil.equals(type,"insufficient_quota")){
+                redisTemplate.delete("apikey");
+                officalGetData(tbAnsweUser);
+            }
+        }
+    }
+    public void changeKeyAsk(){
+        Object apikey = redisTemplate.opsForValue().get("apikey");
+        String input = "你好";
+        //请求URL
+        String  url = "https://api.openai.com/v1/chat/completions";
+
+        Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
+        gpt35TurboVO.setRole("user");
+        gpt35TurboVO.setContent(input);
+        List<Gpt35TurboVO> objects = new ArrayList<>();
+        objects.add(gpt35TurboVO);
+
+        Map<Object, Object> objectObjectHashMap = new HashMap<>();
+        objectObjectHashMap.put("model","gpt-3.5-turbo");
+        objectObjectHashMap.put("messages",objects);
+        String postData = JSONUtil.toJsonStr(objectObjectHashMap);
+        String result2 = HttpRequest.post(url)
+                .header("Authorization", "Bearer "+apikey)//头信息，多个头信息多次调用此方法即可
+                .header("Content-Type","application/json")
+                .body(postData)//表单内容
+                .timeout(200000)//超时，毫秒
+                .execute().body();
+        if (StrUtil.isNotBlank(result2)){
+            String error = JsonUtil.parseMiddleData(result2, "error");
+            String type = JsonUtil.parseMiddleData(error, "type");
+            if (StrUtil.equals(type,"insufficient_quota")){
+                redisTemplate.delete("apikey");
                 officalGetDataAsk();
             }
         }
