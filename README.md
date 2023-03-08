@@ -4,6 +4,8 @@
 
 * 微信小程序源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_font)
 
+* 后台管理前端源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_manager)
+
 小程序需配合此套java程序，下面将详细介绍此套系统的搭建过程谢谢！
 如果前端的话请大家转移的上述的前端链接，获取小程序源码
 
@@ -19,7 +21,7 @@
 * 首先后端源码下载下来，用idea源码编辑器打开,只需要修改配置文件中的数据库信息（ruoyi-admin/src/main/resources/application-druid.yml）,如果redis设置了密码需要一同改掉
 * 然后直接启动项目即可(有任何我问题可以加入下方QQ群一起交流)
 
-###  **_教程视频_**  : [B站视频教程-小白可搭建](https://space.bilibili.com/342298458/channel/seriesdetail?sid=3077994&ctype=0)
+###  **_教程视频_**  : [B站视频教程-小白可搭建](https://space.bilibili.com/342298458/channel/seriesdetail?sid=3077994&ctype=0)（搭建视频未更新,等待更新）
 
 
 1.服务器配置
@@ -66,5 +68,21 @@ QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://
     <tr>
         <td><img src="https://image.hongchiqingyun.com/5.jpg"/></td>
     </tr>	 
+ 
+</table>
+
+
+
+
+## 后台演示
+<table>
+    <tr>
+        <td><img src="https://image.hongchiqingyun.com/hou1.png"/></td>
+        <td><img src="https://image.hongchiqingyun.com/hou2.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://image.hongchiqingyun.com/hou3.png"/></td>
+        <td><img src="https://image.hongchiqingyun.com/hou4.png"/></td>
+    </tr>
  
 </table>
