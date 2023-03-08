@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatgpt.mapper.TbKeyManagerMapper">
+
+    <resultMap type="TbKeyManager" id="TbKeyManagerResult">
+        <result property="id"    column="id"    />
+        <result property="secretKey"    column="secret_key"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="isDetele"    column="is_detele"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbKeyManagerVo">
+        select id, secret_key, user_id, is_use, is_detele, create_by, create_time, update_by, update_time, remark from tb_key_manager
+    </sql>
+
+    <select id="selectTbKeyManagerList" parameterType="TbKeyManager" resultMap="TbKeyManagerResult">
+        <include refid="selectTbKeyManagerVo"/>
+        <where>
+            <if test="secretKey != null  and secretKey != ''"> and secret_key = #{secretKey}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+        </where>
+    </select>
+
+    <select id="selectTbKeyManagerById" parameterType="Long" resultMap="TbKeyManagerResult">
+        <include refid="selectTbKeyManagerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbKeyManager" parameterType="TbKeyManager" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_key_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="secretKey != null">secret_key,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="isDetele != null">is_detele,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="secretKey != null">#{secretKey},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="isDetele != null">#{isDetele},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbKeyManager" parameterType="TbKeyManager">
+        update tb_key_manager
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="secretKey != null">secret_key = #{secretKey},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="isDetele != null">is_detele = #{isDetele},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbKeyManagerById" parameterType="Long">
+        delete from tb_key_manager where id = #{id}
+    </delete>
+
+
+    <update id="changeKeyStatusToUsed" parameterType="String">
+        update tb_key_manager set is_use = 0 where  secret_key = #{secretKey}
+    </update>
+
+
+    <update id="changeKeyStatusToDeteleAsk" parameterType="String">
+        update tb_key_manager set is_detele = 0 where  secret_key = #{secretKey} and is_use = 0 and is_detele = 1
+    </update>
+
+
+    <delete id="deleteTbKeyManagerByIds" parameterType="String">
+        delete from tb_key_manager where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectTbKeyManagerListsys" parameterType="TbKeyManager" resultMap="TbKeyManagerResult">
+        <include refid="selectTbKeyManagerVo"/>
+        <where>
+                        <if test="secretKey != null  and secretKey != ''"> and secret_key = #{secretKey}</if>
+                        <if test="userId != null "> and user_id = #{userId}</if>
+                        <if test="isUse != null "> and is_use = #{isUse}</if>
+                        <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+        </where>
+    </select>
+
+    <select id="selectTbKeyManagerByIdsys" parameterType="Long" resultMap="TbKeyManagerResult">
+            <include refid="selectTbKeyManagerVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertTbKeyManagersys" parameterType="TbKeyManager" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_key_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="secretKey != null">secret_key,</if>
+                    <if test="userId != null">user_id,</if>
+                    <if test="isUse != null">is_use,</if>
+                    <if test="isDetele != null">is_detele,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="secretKey != null">#{secretKey},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="isUse != null">#{isUse},</if>
+                    <if test="isDetele != null">#{isDetele},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbKeyManagersys" parameterType="TbKeyManager">
+        update tb_key_manager
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="secretKey != null">secret_key = #{secretKey},</if>
+                    <if test="userId != null">user_id = #{userId},</if>
+                    <if test="isUse != null">is_use = #{isUse},</if>
+                    <if test="isDetele != null">is_detele = #{isDetele},</if>
+                    <if test="createBy != null">create_by = #{createBy},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbKeyManagerByIdsys" parameterType="Long">
+        delete from tb_key_manager where id = #{id}
+    </delete>
+
+    <delete id="deleteTbKeyManagerByIdssys" parameterType="String">
+        delete from tb_key_manager where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+</mapper>
