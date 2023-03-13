@@ -119,9 +119,19 @@ public class TbKeyManagerController extends BaseController
                     return error("key次数用完");
                 }
             }
-
-
             if (StrUtil.isNotBlank(result2)) {
+                if (StrUtil.contains(result2, "invalid_request_error") ) {
+                    String error = JsonUtil.parseMiddleData(result2, "error");
+                    String type = JsonUtil.parseMiddleData(error, "type");
+                    String code = JsonUtil.parseMiddleData(error, "code");
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                        return error("账户被封禁");
+                    }
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                        return error("key不正确");
+                    }
+                }
+
                 if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
                     return error("key次数用完");
                 }
@@ -179,6 +189,19 @@ public class TbKeyManagerController extends BaseController
                 }
             }
             if (StrUtil.isNotBlank(result2)) {
+
+                if (StrUtil.contains(result2, "invalid_request_error") ) {
+                    String error = JsonUtil.parseMiddleData(result2, "error");
+                    String type = JsonUtil.parseMiddleData(error, "type");
+                    String code = JsonUtil.parseMiddleData(error, "code");
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                        return error("账户被封禁");
+                    }
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                        return error("key不正确");
+                    }
+                }
+
                 if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
                     return error("key次数用完");
                 }

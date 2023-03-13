@@ -110,6 +110,8 @@ public class chatGtpController {
             if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
                 return error("请求错误");
             }
+
+            //key用完了次数
             if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
                 //首先删除,缓存的key从数据库
                 String apikey = (String) redisTemplate.opsForValue().get("apikey");
@@ -507,6 +509,43 @@ public class chatGtpController {
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetData(tbAnsweUser);
             }
+
+
+
+
+
+            if (StrUtil.isNotBlank(result2)) {
+                if (StrUtil.contains(result2, "invalid_request_error") ) {
+                    String errorResult = JsonUtil.parseMiddleData(result2, "error");
+                    String typeResult = JsonUtil.parseMiddleData(errorResult, "type");
+                    String code = JsonUtil.parseMiddleData(errorResult, "code");
+                    if (StrUtil.equals(typeResult,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                        redisTemplate.delete("apikey");
+                        iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                        officalGetData(tbAnsweUser);
+                    }
+                    if (StrUtil.equals(typeResult,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                        redisTemplate.delete("apikey");
+                        iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                        officalGetData(tbAnsweUser);
+                    }
+                }
+                if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
+                    redisTemplate.delete("apikey");
+                    iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                    officalGetData(tbAnsweUser);
+                }
+                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code"))) {
+                    redisTemplate.delete("apikey");
+                    iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                    officalGetData(tbAnsweUser);
+                }else {
+//                            return error("我没有搜索出来答案");
+                }
+            }
+
+
+
         }
     }
 
@@ -540,6 +579,37 @@ public class chatGtpController {
                 redisTemplate.delete("apikey");
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();
+            }
+        }
+
+
+        if (StrUtil.isNotBlank(result2)) {
+            if (StrUtil.contains(result2, "invalid_request_error") ) {
+                String errorResult = JsonUtil.parseMiddleData(result2, "error");
+                String typeResult = JsonUtil.parseMiddleData(errorResult, "type");
+                String code = JsonUtil.parseMiddleData(errorResult, "code");
+                if (StrUtil.equals(typeResult,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                    redisTemplate.delete("apikey");
+                    iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                    officalGetDataAsk();
+                }
+                if (StrUtil.equals(typeResult,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                    redisTemplate.delete("apikey");
+                    iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                    officalGetDataAsk();
+                }
+            }
+            if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
+                redisTemplate.delete("apikey");
+                iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                officalGetDataAsk();
+            }
+            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code"))) {
+                redisTemplate.delete("apikey");
+                iTbKeyManagerService.changeKeyStatusToUsed(apikey);
+                officalGetDataAsk();
+            }else {
+//                            return error("我没有搜索出来答案");
             }
         }
     }
