@@ -108,8 +108,34 @@ public class chatGtpController {
             //查看是否有后缀语
             String back_ask = iSysConfigService.selectConfigByKey("back_ask");
             if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
-                return error("请求错误");
+                return error("TooManyRequests");
             }
+
+
+            if (StrUtil.isNotBlank(body)) {
+                if (StrUtil.contains(body, "invalid_request_error") ) {
+                    String error = JsonUtil.parseMiddleData(body, "error");
+                    String type = JsonUtil.parseMiddleData(error, "type");
+                    String code = JsonUtil.parseMiddleData(error, "code");
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                        return error("账户被封禁");
+                    }
+                    if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                        return error("key不正确");
+                    }
+                }
+
+                if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
+                    return error("TooManyRequests");
+                }
+                if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
+                    return error("key次数用完");
+                }else {
+//                            return error("我没有搜索出来答案");
+                }
+            }
+
+
 
             //key用完了次数
             if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
@@ -340,10 +366,36 @@ public class chatGtpController {
             return error("请求错误");
         }
 
+
+
+        if (StrUtil.isNotBlank(body)) {
+            if (StrUtil.contains(body, "invalid_request_error") ) {
+                String error = JsonUtil.parseMiddleData(body, "error");
+                String type = JsonUtil.parseMiddleData(error, "type");
+                String code = JsonUtil.parseMiddleData(error, "code");
+                if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"account_deactivated")){
+                    return error("账户被封禁");
+                }
+                if (StrUtil.equals(type,"invalid_request_error") && StrUtil.equals(code,"invalid_api_key")) {
+                    return error("key不正确");
+                }
+            }
+
+            if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
+                return error("TooManyRequests");
+            }
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
+                return error("key次数用完");
+            }else {
+//                            return error("我没有搜索出来答案");
+            }
+        }
+
+
         if (StrUtil.isNotBlank(body)) {
             if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
                 redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
-                return error("请求错误");
+                return error("TooManyRequests");
             }
             if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
 
@@ -447,7 +499,7 @@ public class chatGtpController {
         //判断是否key额度用完
         if (CollectionUtil.isEmpty(tbKeyManagers) || tbKeyManagers.size() <= 0) {
             redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
-            return error("key额度已经用完");
+            return error("当前暂无可用的key");
         }
         //获取第一个key,然后将第一个key存入缓存
         String key = tbKeyManagers.get(0).getSecretKey();
@@ -469,7 +521,7 @@ public class chatGtpController {
         List<TbKeyManager> tbKeyManagers = iTbKeyManagerService.selectTbKeyManagerList(tbKeyManager);
         //判断是否key额度用完
         if (CollectionUtil.isEmpty(tbKeyManagers) || tbKeyManagers.size() <= 0) {
-            return error("key额度已经用完");
+            return error("当前暂无可用的key");
         }
 //        //获取第一个key,然后将第一个key存入缓存
         String key = tbKeyManagers.get(0).getSecretKey();
