@@ -576,7 +576,6 @@ public class chatGtpController {
                 }
                 if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
                     redisTemplate.delete("apikey");
-                    iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                     officalGetData(tbAnsweUser);
                 }
                 if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
@@ -645,7 +644,6 @@ public class chatGtpController {
             }
             if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
                 redisTemplate.delete("apikey");
-                iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();
             }
             if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
