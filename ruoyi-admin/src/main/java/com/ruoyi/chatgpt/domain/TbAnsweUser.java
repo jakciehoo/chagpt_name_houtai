@@ -38,7 +38,7 @@ public class TbAnsweUser extends BaseEntity
     private String answeUserAvatar;
 
     /** 回答内容 */
-        private String answeUserJson;
+    private String answeUserJson;
 
     /** 回答次数 */
     private Long answeUserNum;

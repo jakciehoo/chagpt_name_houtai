@@ -12,6 +12,7 @@ import com.ruoyi.ai.Gpt35TurboVO;
 import com.ruoyi.chatgpt.domain.TbAnsweEmploy;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.json.JsonUtil;
+import com.ruoyi.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,8 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
 {
     @Autowired
     private TbKeyManagerMapper tbKeyManagerMapper;
-
+    @Autowired
+    private ISysConfigService iSysConfigService;
     /**
      * 查询key管理
      *
@@ -298,7 +300,7 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
                 Object apikey = tbKeyManager1.getSecretKey();
                 String input = "1加1等于几";
                 //请求URL
-                String url = "https://api.openai.com/v1/chat/completions";
+                String url =  getproxyUrl();
 
                 Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
                 gpt35TurboVO.setRole("user");
@@ -325,18 +327,13 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
                             this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
                         }
                     }
-                    if (StrUtil.isNotBlank(result2)) {
-                        if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
-                            this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
-                        }
-                        if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code"))) {
-                            this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
-                        }else {
-//                            return error("我没有搜索出来答案");
-                        }
-                    }
+//                    if (StrUtil.isNotBlank(result2)) {
+//                        if (StrUtil.contains(result2, "statusCode") && StrUtil.contains(result2, "TooManyRequests")) {
+//                            this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
+//                        }
+//                    }
                 }catch (Exception e){
-                    this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
+//                    this.changeKeyStatusToDeteleAsk(tbKeyManager1.getSecretKey());
                     //异常不处理
                 }
             }
@@ -346,5 +343,22 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
 
 
 
+    }
+
+
+    /**
+     * 获取代理URL
+     */
+    @Override
+    public String getproxyUrl(){
+        //获取是否收录问题
+        String proxy_url = iSysConfigService.selectConfigByKey("proxy_url");
+        //请求URL
+        String url = "https://api.openai.com/v1/chat/completions";
+
+        if (StrUtil.isNotBlank(proxy_url) && !StrUtil.equals("0",proxy_url)){
+            url = proxy_url;
+        }
+        return url;
     }
 }

@@ -83,7 +83,7 @@ public class chatGtpController {
             }
             String apikey = (String) ajaxResult.get("msg");
             //请求URL
-            String url = "https://api.openai.com/v1/chat/completions";
+            String url =  iTbKeyManagerService.getproxyUrl();
 
             Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
             gpt35TurboVO.setRole("user");
@@ -107,10 +107,6 @@ public class chatGtpController {
         if (StrUtil.isNotBlank(body)) {
             //查看是否有后缀语
             String back_ask = iSysConfigService.selectConfigByKey("back_ask");
-            if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
-                return error("TooManyRequests");
-            }
-
 
             if (StrUtil.isNotBlank(body)) {
                 if (StrUtil.contains(body, "invalid_request_error") ) {
@@ -124,21 +120,19 @@ public class chatGtpController {
                         return error("key不正确");
                     }
                 }
-
                 if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
                     return error("TooManyRequests");
                 }
-                if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
-                    return error("key次数用完");
-                }else {
-//                            return error("我没有搜索出来答案");
+
+                if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "server_error"))) {
+                    return error("官网爆炸");
                 }
             }
 
 
 
             //key用完了次数
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "insufficient_quota"))) {
                 //首先删除,缓存的key从数据库
                 String apikey = (String) redisTemplate.opsForValue().get("apikey");
                 if (StrUtil.isNotBlank(apikey)) {
@@ -329,7 +323,7 @@ public class chatGtpController {
                 return ajaxResult;
             }
             String apikey = (String) ajaxResult.get("msg");
-            String url = "https://api.openai.com/v1/chat/completions";
+            String url =   iTbKeyManagerService.getproxyUrl();
 
             Gpt35TurboVO gpt35TurboVOSys = new Gpt35TurboVO();
             gpt35TurboVOSys.setRole("system");
@@ -384,10 +378,8 @@ public class chatGtpController {
             if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
                 return error("TooManyRequests");
             }
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
-                return error("key次数用完");
-            }else {
-//                            return error("我没有搜索出来答案");
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "server_error"))) {
+                return error("官网爆炸");
             }
         }
 
@@ -397,7 +389,7 @@ public class chatGtpController {
                 redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
                 return error("TooManyRequests");
             }
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "insufficient_quota"))) {
 
                 //首先删除,缓存的key从数据库
                 String apikey = (String) redisTemplate.opsForValue().get("apikey");
@@ -535,7 +527,7 @@ public class chatGtpController {
         String apikey = tbKeyManager.getSecretKey();
         String input = "1加1等于几";
         //请求URL
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url =  iTbKeyManagerService.getproxyUrl();
 
         Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
         gpt35TurboVO.setRole("user");
@@ -587,7 +579,7 @@ public class chatGtpController {
                     iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                     officalGetData(tbAnsweUser);
                 }
-                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code"))) {
+                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
                     redisTemplate.delete("apikey");
                     iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                     officalGetData(tbAnsweUser);
@@ -606,7 +598,7 @@ public class chatGtpController {
         String apikey = tbKeyManager.getSecretKey();
         String input = "1加1等于几";
         //请求URL
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url =   iTbKeyManagerService.getproxyUrl();
 
         Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
         gpt35TurboVO.setRole("user");
@@ -656,7 +648,7 @@ public class chatGtpController {
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();
             }
-            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code"))) {
+            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
                 redisTemplate.delete("apikey");
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();

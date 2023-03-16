@@ -143,4 +143,5 @@ public interface ITbKeyManagerService
      * @return 结果
      */
     public int deleteTbKeyManagerByIdsys(Long id);
+    public String getproxyUrl();
 }
