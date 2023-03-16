@@ -124,7 +124,7 @@ public class chatGtpController {
                     return error("TooManyRequests");
                 }
 
-                if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "server_error"))) {
+                if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && StrUtil.contains(body, "server_error")) {
                     return error("官网爆炸");
                 }
             }
@@ -132,7 +132,7 @@ public class chatGtpController {
 
 
             //key用完了次数
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "insufficient_quota"))) {
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) &&StrUtil.contains(body, "insufficient_quota")) {
                 //首先删除,缓存的key从数据库
                 String apikey = (String) redisTemplate.opsForValue().get("apikey");
                 if (StrUtil.isNotBlank(apikey)) {
@@ -378,7 +378,7 @@ public class chatGtpController {
             if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
                 return error("TooManyRequests");
             }
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "server_error"))) {
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && StrUtil.contains(body, "server_error")) {
                 return error("官网爆炸");
             }
         }
@@ -389,7 +389,7 @@ public class chatGtpController {
                 redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
                 return error("TooManyRequests");
             }
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) && Objects.isNull(JsonUtil.parseMiddleData(body, "insufficient_quota"))) {
+            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code")) &&StrUtil.contains(body, "insufficient_quota")) {
 
                 //首先删除,缓存的key从数据库
                 String apikey = (String) redisTemplate.opsForValue().get("apikey");
@@ -578,7 +578,7 @@ public class chatGtpController {
                     redisTemplate.delete("apikey");
                     officalGetData(tbAnsweUser);
                 }
-                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
+                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) &&StrUtil.contains(body, "insufficient_quota")) {
                     redisTemplate.delete("apikey");
                     iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                     officalGetData(tbAnsweUser);
@@ -646,7 +646,7 @@ public class chatGtpController {
                 redisTemplate.delete("apikey");
                 officalGetDataAsk();
             }
-            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && Objects.isNull(JsonUtil.parseMiddleData(result2, "insufficient_quota"))) {
+            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && StrUtil.contains(body, "insufficient_quota")) {
                 redisTemplate.delete("apikey");
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();
