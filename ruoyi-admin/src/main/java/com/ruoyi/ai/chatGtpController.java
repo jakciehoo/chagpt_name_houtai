@@ -41,7 +41,6 @@ public class chatGtpController {
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
 
-
     @Autowired
     private ITbKeyManagerService iTbKeyManagerService;
     @Autowired
@@ -578,7 +577,7 @@ public class chatGtpController {
                     redisTemplate.delete("apikey");
                     officalGetData(tbAnsweUser);
                 }
-                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) &&StrUtil.contains(body, "insufficient_quota")) {
+                if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) &&StrUtil.contains(result2, "insufficient_quota")) {
                     redisTemplate.delete("apikey");
                     iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                     officalGetData(tbAnsweUser);
@@ -646,7 +645,7 @@ public class chatGtpController {
                 redisTemplate.delete("apikey");
                 officalGetDataAsk();
             }
-            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && StrUtil.contains(body, "insufficient_quota")) {
+            if (StrUtil.contains(result2, "code") && Objects.isNull(JsonUtil.parseMiddleData(result2, "code")) && StrUtil.contains(result2, "insufficient_quota")) {
                 redisTemplate.delete("apikey");
                 iTbKeyManagerService.changeKeyStatusToUsed(apikey);
                 officalGetDataAsk();

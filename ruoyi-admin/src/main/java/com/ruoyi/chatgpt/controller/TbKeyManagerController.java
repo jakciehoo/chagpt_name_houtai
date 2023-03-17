@@ -93,7 +93,7 @@ public class TbKeyManagerController extends BaseController
         Object apikey = tbKeyManager.getSecretKey();
         String input = "1加1等于几";
         //请求URL
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url =  tbKeyManagerService.getproxyUrl();
 
         Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
         gpt35TurboVO.setRole("user");
@@ -162,7 +162,7 @@ public class TbKeyManagerController extends BaseController
         Object apikey = tbKeyManager.getSecretKey();
         String input = "1加1等于几";
         //请求URL
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url =  tbKeyManagerService.getproxyUrl();
 
         Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
         gpt35TurboVO.setRole("user");

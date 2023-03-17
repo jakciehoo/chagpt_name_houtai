@@ -351,7 +351,6 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
      */
     @Override
     public String getproxyUrl(){
-        //获取是否收录问题
         String proxy_url = iSysConfigService.selectConfigByKey("proxy_url");
         //请求URL
         String url = "https://api.openai.com/v1/chat/completions";
