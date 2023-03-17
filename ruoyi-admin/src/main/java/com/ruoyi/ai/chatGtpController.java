@@ -269,7 +269,7 @@ public class chatGtpController {
     public AjaxResult chatBot(@RequestBody TbAnsweUser tbAnsweUser) {
 
         if (StrUtil.isBlank(tbAnsweUser.getAnsweUserOpenid())) {
-            return error("请您先登陆");
+            return error("请至后台管理填写小程序id和密钥");
         }
         Object o = redisTemplate.opsForValue().get(tbAnsweUser.getAnsweUserOpenid());
         if (!Objects.isNull(o)) {
@@ -399,7 +399,7 @@ public class chatGtpController {
                 redisTemplate.delete("apikey");
                 officalGetData(tbAnsweUser);
                 redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
-                return error("请再次提问,本系统进行了自我维护");
+                return error("本次key失效");
             } else if (StrUtil.contains(JsonUtil.parseMiddleData(body, "model"), "gpt-3.5-turbo")) {
                 try {
                     String code = JsonUtil.parseMiddleData(body, "choices");
