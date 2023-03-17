@@ -140,7 +140,7 @@ public class chatGtpController {
                 //刷新
                 redisTemplate.delete("apikey");
                 officalGetDataAsk();
-                return error("请再次提问,本系统进行了自我维护");
+                return error("本次key失效");
             } else if (StrUtil.contains(JsonUtil.parseMiddleData(body, "model"), "gpt-3.5-turbo")) {
                 try {
                     String code = JsonUtil.parseMiddleData(body, "choices");
