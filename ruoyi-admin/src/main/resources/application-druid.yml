@@ -59,9 +59,3 @@ spring:
                     url: jdbc:mysql://localhost:3306/cmc_fws_open?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                     username: root
                     password: 123456
-                # 测试数据源
-                test:
-                    driver-class-name: com.mysql.jdbc.Driver
-                    url: jdbc:mysql://localhost:3306/cmc_fws_open?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                    username: root
-                    password: 123456
