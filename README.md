@@ -1,10 +1,15 @@
-<h4 align="center">此套系统,后端用的为java后端开源系统</h4>
+<h4 align="center">chatgpt全网开源程序功能最全版本</h4>
+
 
 ## 后端介绍
 
 * 微信小程序源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_font)
 
 * 后台管理前端源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_manager)
+
+* github地址： [点我进入](https://github.com/e0cia)
+
+
 
 小程序需配合此套java程序，下面将详细介绍此套系统的搭建过程谢谢！
 如果前端的话请大家转移的上述的前端链接，获取小程序源码
@@ -16,38 +21,67 @@
 * redis
 * maven
 
-## 搭建教学
 
-* 首先后端源码下载下来，用idea源码编辑器打开,只需要修改配置文件中的数据库信息（ruoyi-admin/src/main/resources/application-druid.yml）,如果redis设置了密码需要一同改掉
-* 然后直接启动项目即可(有任何我问题可以加入下方QQ群一起交流)
-
-###  **_教程视频_**  : [B站视频教程-小白可搭建](https://space.bilibili.com/342298458/channel/seriesdetail?sid=3077994&ctype=0)（最新视频已经更新,有问题请加群）
+## 搭建教学（有任何问题请加群-群里老哥24小时解决问题）
+###  **_安装教程_**  : [点我进入](https://yaiwiki.likesrt.com/archives/no1.html)
 
 
-1.服务器配置
 
-centos7.9
+## 小程序简介
 
-2.宝塔面板安装宝塔
+**功能简介** 
 
-https://www.bt.cn/new/download.html
+*1.角色选择
 
-3.如果在线下载地址报错:
+*2.优化UI和角色预设
 
-下载xshell : https://rj.mqxsowp.cn/
+*3.增加stream流式传输
 
-4.前端使用工具 : 
+*4.集成模型包括gpt3.5（初版大更新gpt4、绘画模型、文心一言等暂时没有加、下个版本就会加入）
 
-HBuilder X : https://www.dcloud.io/hbuilderx.html
+*5.历史对话记录
 
-node.js : https://nodejs.org/en/
+*6.我的问询记录
 
+*7.支持三方接口
+
+*8.增加会员中心
+
+*9.展示剩余次数
+
+*10.增加次数和时间两种计费模式,后台可行性选择
+
+*11.增加充值（目前仅支持充值卡重置）功能
+
+*12.分享增加次数功能
+
+*13.是否计费对话、是否计费询问、公告显示等均可自定义开关
+
+*14.后台自行添加模型分类、模型名称、设定语等等
+
+*15.所有后台配置页面化
+
+*16.用户管理
+
+*17.在线用户
+
+*18.登录日志
+
+*19.后台批量生成激活码
+
+*20.激活码一键导出
+
+*21.后台key统一管理
+
+*22.key自动轮询
+
+*23.使用的为微信官方违禁词，可自行添加违禁词
 
 
 ## 交流群
 
-QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://qm.qq.com/cgi-bin/qm/qr?k=r9wUrNxH5gX-EdMMdN4cVOt8MyQV2MnL&jump_from=webapi&authKey=UHRma7Iwg1U6UtlS9tWVEfhcU0WaNJuwRW3H1NHNDQjIkIvCpjC/RdNwFaMjxF3W) 
-
+QQ群： ![加入QQ群](https://yuan-ai.oss-cn-beijing.aliyuncs.com/qqgroup.jpg)
+微信群： ![加入QQ群](https://yuan-ai.oss-cn-beijing.aliyuncs.com/qqgroup.jpg)
 
 ## 小程序演示
 <table>
@@ -58,15 +92,23 @@ QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://
 
 <table>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/1.jpg"/></td>
-        <td><img src="https://image.hongchiqingyun.com/2.jpg"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/1.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/2.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/3.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/3.jpg"/></td>
-        <td><img src="https://image.hongchiqingyun.com/4.jpg"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/4.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/5.png"/></td>        
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/6.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/5.jpg"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/7.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/8.png"/></td> 
+         <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/9.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/10.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/qiantai/11.png"/></td> 
     </tr>	 
  
 </table>
@@ -77,12 +119,18 @@ QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://
 ## 后台演示
 <table>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/hou1.png"/></td>
-        <td><img src="https://image.hongchiqingyun.com/hou2.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/1.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/2.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/3.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/hou3.png"/></td>
-        <td><img src="https://image.hongchiqingyun.com/hou4.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/4.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/5.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/6.png"/></td>
     </tr>
- 
+     <tr>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/7.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/8.png"/></td>
+        <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/9.png"/></td>
+    </tr>
 </table>
