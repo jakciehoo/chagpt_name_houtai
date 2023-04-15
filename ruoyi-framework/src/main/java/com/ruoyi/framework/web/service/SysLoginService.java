@@ -117,27 +117,20 @@ public class SysLoginService
      */
     public String wxlogin(SysUser user)
     {
-
-
-
         if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUserName(), Constants.LOGIN_FAIL, MessageUtils.message("user.password.delete")));
         }
-
         if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUserName(), Constants.LOGIN_FAIL, MessageUtils.message("user.blocked", user.getRemark())));
 
         }
-
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(user.getUserName(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         recordLoginInfo(user.getUserId());
         Set<String> menuPermission = sysPermissionService.getMenuPermission(user);
         System.out.println(menuPermission);
-
         LoginUser loginUser = new LoginUser();
-
         loginUser.setPermissions(menuPermission);
         loginUser.setDeptId(user.getDeptId());
         loginUser.setUserId(user.getUserId());

@@ -6,9 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.ai.Gpt35TurboVO;
+import com.ruoyi.ai.doamin.Gpt35TurboVO;
 import com.ruoyi.common.utils.json.JsonUtil;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +34,7 @@ import com.ruoyi.common.utils.SecurityUtils;
  * @date 2023-03-06
  */
 @RestController
-@RequestMapping("/chatgpt/manager")
+@RequestMapping("/cricleai/manager")
 public class TbKeyManagerController extends BaseController
 {
     @Autowired

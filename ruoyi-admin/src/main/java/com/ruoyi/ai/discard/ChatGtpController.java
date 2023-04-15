@@ -1,14 +1,19 @@
-package com.ruoyi.ai;
+package com.ruoyi.ai.discard;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
+import com.ruoyi.ai.*;
+import com.ruoyi.ai.doamin.AIVO;
+import com.ruoyi.ai.doamin.ContentVo;
+import com.ruoyi.ai.doamin.Gpt35TurboVO;
+import com.ruoyi.ai.doamin.ReturnAnswerVo;
+import com.ruoyi.ai.service.IconfigService;
 import com.ruoyi.chatgpt.domain.TbAnsweEmploy;
 import com.ruoyi.chatgpt.domain.TbAnsweUser;
 import com.ruoyi.chatgpt.domain.TbKeyManager;
@@ -17,7 +22,6 @@ import com.ruoyi.chatgpt.service.ITbAnsweUserService;
 import com.ruoyi.chatgpt.service.ITbKeyManagerService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.json.JsonUtil;
-import com.ruoyi.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +32,18 @@ import java.util.concurrent.TimeUnit;
 import static com.ruoyi.common.core.domain.AjaxResult.error;
 import static com.ruoyi.common.core.domain.AjaxResult.success;
 
+/**
+ * 该类已被抛弃，维持老版本用户使用
+ */
 @RequestMapping("/ai")
 @RestController
-public class chatGtpController {
+public class ChatGtpController {
     @Autowired
     private ITbAnsweEmployService iTbAnsweEmployService;
     @Autowired
-    private ISysConfigService iSysConfigService;
+    private IconfigService iconfigService;
     @Autowired
-    private WeiXinUtil weiXinUtil;
+    private WeiXinUtilService weiXinUtil;
 
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
@@ -49,9 +56,9 @@ public class chatGtpController {
     @PostMapping("/chat")
     public AjaxResult chat(@RequestBody AIVO aivo) {
         //获取是否收录问题
-        String is_employ_ask = iSysConfigService.selectConfigByKey("is_employ_ask");
+        String is_employ_ask = iconfigService.selectConfigByKey("is_employ_ask");
         //是否检查
-        String is_check_ask = iSysConfigService.selectConfigByKey("is_check_ask");
+        String is_check_ask = iconfigService.selectConfigByKey("is_check_ask");
         if (StrUtil.isBlank(aivo.getPrompt())) {
             return error("输入内容为空");
         }
@@ -105,7 +112,7 @@ public class chatGtpController {
         }
         if (StrUtil.isNotBlank(body)) {
             //查看是否有后缀语
-            String back_ask = iSysConfigService.selectConfigByKey("back_ask");
+            String back_ask = iconfigService.selectConfigByKey("back_ask");
 
             if (StrUtil.isNotBlank(body)) {
                 if (StrUtil.contains(body, "invalid_request_error") ) {
@@ -186,23 +193,23 @@ public class chatGtpController {
     @PostMapping("/configInfo")
     public AjaxResult chat() {
         //小程序名称
-        String weichat_name = iSysConfigService.selectConfigByKey("weichat_name");
+        String weichat_name = iconfigService.selectConfigByKey("weichat_name");
         //小程序广告
-        String weichat_adv = iSysConfigService.selectConfigByKey("weichat_adv");
+        String weichat_desc = iconfigService.selectConfigByKey("weichat_desc");
         //小程序公告
-        String weichat_notice = iSysConfigService.selectConfigByKey("weichat_notice");
+        String weichat_notice = iconfigService.selectConfigByKey("weichat_notice");
         //是否开启开发方接口
-        String is_open_api = iSysConfigService.selectConfigByKey("is_open_api");
+        String is_open_api = iconfigService.selectConfigByKey("is_open_api");
         //开发方问答接口
-        String ai_chat_api = iSysConfigService.selectConfigByKey("ai_chat_api");
+        String ai_chat_api = iconfigService.selectConfigByKey("ai_chat_api");
         //开发方聊天接口
-        String ai_chat_bot_api = iSysConfigService.selectConfigByKey("ai_chat_bot_api");
+        String ai_chat_bot_api = iconfigService.selectConfigByKey("ai_chat_bot_api");
         //开发方聊天接口
-        String open_api_key = iSysConfigService.selectConfigByKey("open_api_key");
+        String open_api_key = iconfigService.selectConfigByKey("open_api_key");
 
         Map<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put("weichat_name", weichat_name);
-        objectObjectHashMap.put("weichat_adv", weichat_adv);
+        objectObjectHashMap.put("weichat_desc", weichat_desc);
         objectObjectHashMap.put("weichat_notice", weichat_notice);
         objectObjectHashMap.put("is_open_api", is_open_api);
         objectObjectHashMap.put("ai_chat_api", ai_chat_api);
@@ -256,12 +263,9 @@ public class chatGtpController {
      * @return
      */
     @GetMapping("/checkIsIng")
-    public Boolean checkIsIng(String answeUserOpenid) {
+    public AjaxResult checkIsIng(String answeUserOpenid) {
         Object o = redisTemplate.opsForValue().get(answeUserOpenid);
-        if (Objects.isNull(o)) {
-            return false;
-        }
-        return true;
+        return success(!Objects.isNull(o));
     }
 
 
@@ -282,7 +286,7 @@ public class chatGtpController {
             return error("您暂无授权");
         }
         //是否检查
-        String is_check_ask = iSysConfigService.selectConfigByKey("is_check_ask");
+        String is_check_ask = iconfigService.selectConfigByKey("is_check_ask");
         if (StrUtil.isBlank(tbAnsweUser.getPrompt())) {
             redisTemplate.delete(tbAnsweUser.getAnsweUserOpenid());
             return error("输入内容为空");
@@ -434,7 +438,7 @@ public class chatGtpController {
             returnAnswerVo.setContentType(0);
             returnAnswerVo.setAnimation(true);
             //查看是否有后缀语
-            String back_ask = iSysConfigService.selectConfigByKey("back_ask");
+            String back_ask = iconfigService.selectConfigByKey("back_ask");
             if (!StrUtil.equals(back_ask, "0")) {
                 //添加回复内容
                 contentVo.setText(body + "\n" + back_ask);

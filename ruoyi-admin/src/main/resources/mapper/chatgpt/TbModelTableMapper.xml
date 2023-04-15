@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatgpt.mapper.TbModelTableMapper">
+
+    <resultMap type="TbModelTable" id="TbModelTableResult">
+        <result property="id"    column="id"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="modelImage"    column="model_image"    />
+        <result property="modelContent"    column="model_content"    />
+        <result property="isUse"    column="is_use"    />
+        <result property="isDetele"    column="is_detele"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="dRoleId"    column="d_role_id"    />
+    </resultMap>
+
+    <sql id="selectTbModelTableVo">
+        select d_role_id,id, model_name, model_image, model_content, is_use, is_detele, create_by, create_time, update_by, update_time, remark from tb_model_table
+    </sql>
+
+    <select id="selectTbModelTableList" parameterType="TbModelTable" resultMap="TbModelTableResult">
+        <include refid="selectTbModelTableVo"/>
+        <where>
+            <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+            <if test="modelImage != null  and modelImage != ''"> and model_image = #{modelImage}</if>
+            <if test="modelContent != null  and modelContent != ''"> and model_content like concat('%', #{modelContent}, '%')</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+            <if test="dRoleId != null "> and d_role_id = #{dRoleId}</if>
+        </where>
+    </select>
+
+    <select id="selectTbModelTableById" parameterType="Long" resultMap="TbModelTableResult">
+        <include refid="selectTbModelTableVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbModelTable" parameterType="TbModelTable" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_model_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">model_name,</if>
+            <if test="modelImage != null">model_image,</if>
+            <if test="modelContent != null and modelContent != ''">model_content,</if>
+            <if test="isUse != null">is_use,</if>
+            <if test="isDetele != null">is_detele,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="dRoleId != null">d_role_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">#{modelName},</if>
+            <if test="modelImage != null">#{modelImage},</if>
+            <if test="modelContent != null and modelContent != ''">#{modelContent},</if>
+            <if test="isUse != null">#{isUse},</if>
+            <if test="isDetele != null">#{isDetele},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="dRoleId != null">#{dRoleId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbModelTable" parameterType="TbModelTable">
+        update tb_model_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">model_name = #{modelName},</if>
+            <if test="modelImage != null">model_image = #{modelImage},</if>
+            <if test="modelContent != null and modelContent != ''">model_content = #{modelContent},</if>
+            <if test="isUse != null">is_use = #{isUse},</if>
+            <if test="isDetele != null">is_detele = #{isDetele},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="dRoleId != null">d_role_id = #{dRoleId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbModelTableById" parameterType="Long">
+        delete from tb_model_table where id = #{id}
+    </delete>
+
+    <delete id="deleteTbModelTableByIds" parameterType="String">
+        delete from tb_model_table where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectTbModelTableListsys" parameterType="TbModelTable" resultMap="TbModelTableResult">
+        <include refid="selectTbModelTableVo"/>
+        <where>
+                        <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+                        <if test="modelImage != null  and modelImage != ''"> and model_image = #{modelImage}</if>
+                        <if test="modelContent != null  and modelContent != ''"> and model_content like concat('%', #{modelContent}, '%')</if>
+                        <if test="isUse != null "> and is_use = #{isUse}</if>
+                        <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+            <if test="dRoleId != null "> and d_role_id = #{dRoleId}</if>
+        </where>
+    </select>
+
+    <select id="selectTbModelTableByIdsys" parameterType="Long" resultMap="TbModelTableResult">
+            <include refid="selectTbModelTableVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertTbModelTablesys" parameterType="TbModelTable" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_model_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="modelName != null and modelName != ''">model_name,</if>
+                    <if test="modelImage != null">model_image,</if>
+                    <if test="modelContent != null and modelContent != ''">model_content,</if>
+                    <if test="isUse != null">is_use,</if>
+                    <if test="isDetele != null">is_detele,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="remark != null">remark,</if>
+            <if test="dRoleId != null">d_role_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="modelName != null and modelName != ''">#{modelName},</if>
+                    <if test="modelImage != null">#{modelImage},</if>
+                    <if test="modelContent != null and modelContent != ''">#{modelContent},</if>
+                    <if test="isUse != null">#{isUse},</if>
+                    <if test="isDetele != null">#{isDetele},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="remark != null">#{remark},</if>
+            <if test="dRoleId != null">#{dRoleId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbModelTablesys" parameterType="TbModelTable">
+        update tb_model_table
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="modelName != null and modelName != ''">model_name = #{modelName},</if>
+                    <if test="modelImage != null">model_image = #{modelImage},</if>
+                    <if test="modelContent != null and modelContent != ''">model_content = #{modelContent},</if>
+                    <if test="isUse != null">is_use = #{isUse},</if>
+                    <if test="isDetele != null">is_detele = #{isDetele},</if>
+                    <if test="createBy != null">create_by = #{createBy},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                   <if test="dRoleId != null">d_role_id = #{dRoleId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbModelTableByIdsys" parameterType="Long">
+        delete from tb_model_table where id = #{id}
+    </delete>
+
+    <delete id="deleteTbModelTableByIdssys" parameterType="String">
+        delete from tb_model_table where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <select id="selectTbModelListBydRoleId" parameterType="Long" resultMap="TbModelTableResult">
+        <include refid="selectTbModelTableVo"/>
+        where d_role_id = #{dRoleId}
+    </select>
+
+
+</mapper>

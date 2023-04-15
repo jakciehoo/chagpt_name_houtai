@@ -28,7 +28,7 @@ import com.ruoyi.common.utils.SecurityUtils;
  * @date 2023-02-16
  */
 @RestController
-@RequestMapping("/chatgpt/user")
+@RequestMapping("/cricleai/user")
 public class TbAnsweUserController extends BaseController
 {
     @Autowired

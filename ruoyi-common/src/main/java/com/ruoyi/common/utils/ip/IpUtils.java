@@ -3,18 +3,20 @@ package com.ruoyi.common.utils.ip;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.servlet.http.HttpServletRequest;
+
+import cn.hutool.core.util.StrUtil;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 获取IP方法
- * 
+ *
  * @author ruoyi
  */
 public class IpUtils
 {
     /**
      * 获取客户端IP
-     * 
+     *
      * @param request 请求对象
      * @return IP地址
      */
@@ -51,8 +53,46 @@ public class IpUtils
     }
 
     /**
+     * 获取客户端IP
+     *
+     * @param request 请求对象
+     * @return IP地址
+     */
+    public static String getIpAddr_Str(HttpServletRequest request)
+    {
+        if (request == null)
+        {
+            return "unknown";
+        }
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
+            ip = request.getHeader("X-Forwarded-For");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
+            ip = request.getHeader("X-Real-IP");
+        }
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
+        {
+            ip = request.getRemoteAddr();
+        }
+
+        return StrUtil.replace("0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : getMultistageReverseProxyIp(ip),".","_") ;
+    }
+
+    /**
      * 检查是否为内部IP地址
-     * 
+     *
      * @param ip IP地址
      * @return 结果
      */
@@ -64,7 +104,7 @@ public class IpUtils
 
     /**
      * 检查是否为内部IP地址
-     * 
+     *
      * @param addr byte地址
      * @return 结果
      */
@@ -107,7 +147,7 @@ public class IpUtils
 
     /**
      * 将IPv4地址转换成字节
-     * 
+     *
      * @param text IPv4地址
      * @return byte 字节
      */
@@ -195,7 +235,7 @@ public class IpUtils
 
     /**
      * 获取IP地址
-     * 
+     *
      * @return 本地IP地址
      */
     public static String getHostIp()
@@ -212,7 +252,7 @@ public class IpUtils
 
     /**
      * 获取主机名
-     * 
+     *
      * @return 本地主机名
      */
     public static String getHostName()

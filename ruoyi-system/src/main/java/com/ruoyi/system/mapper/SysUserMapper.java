@@ -174,4 +174,15 @@ public interface SysUserMapper
      * @return 结果
      */
     public int deleteAuthUser(Long authId);
+
+    public SysUser selectUserByintiveCode(String intivate);
+
+
+    /**
+     * 校验openid是否唯一
+     *
+     * @param openId
+     * @return 结果
+     */
+    public SysUser checkOpenIDUnique(String openId);
 }

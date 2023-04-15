@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatgpt.mapper.TbDialogueProcessMapper">
+
+    <resultMap type="TbDialogueProcess" id="TbDialogueProcessResult">
+        <result property="id"    column="id"    />
+        <result property="askContent"    column="ask_content"    />
+        <result property="answerContent"    column="answer_content"    />
+        <result property="userId"    column="user_id"    />
+        <result property="sessionId"    column="session_id"    />
+        <result property="isDetele"    column="is_detele"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbDialogueProcessVo">
+        select id, ask_content, answer_content, user_id, session_id, is_detele, create_by, create_time, update_by, update_time, remark from tb_dialogue_process
+    </sql>
+
+    <select id="selectTbDialogueProcessList" parameterType="TbDialogueProcess" resultMap="TbDialogueProcessResult">
+        <include refid="selectTbDialogueProcessVo"/>
+        <where>
+            <if test="askContent != null  and askContent != ''"> and ask_content = #{askContent}</if>
+            <if test="answerContent != null  and answerContent != ''"> and answer_content = #{answerContent}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="sessionId != null "> and session_id = #{sessionId}</if>
+            <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+        </where>
+        ORDER BY  create_time desc
+    </select>
+
+
+    <select id="selectTbDialogueProcessListByLimitDesc" parameterType="TbDialogueProcess" resultMap="TbDialogueProcessResult">
+        <include refid="selectTbDialogueProcessVo"/>
+        <where>
+            <if test="askContent != null  and askContent != ''"> and ask_content = #{askContent}</if>
+            <if test="answerContent != null  and answerContent != ''"> and answer_content = #{answerContent}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="sessionId != null "> and session_id = #{sessionId}</if>
+            <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+            ORDER BY  create_time desc LIMIT #{limitNum}
+        </where>
+    </select>
+
+    <select id="selectTbDialogueProcessById" parameterType="Long" resultMap="TbDialogueProcessResult">
+        <include refid="selectTbDialogueProcessVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbDialogueProcess" parameterType="TbDialogueProcess" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_dialogue_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="askContent != null">ask_content,</if>
+            <if test="answerContent != null">answer_content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="sessionId != null">session_id,</if>
+            <if test="isDetele != null">is_detele,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="askContent != null">#{askContent},</if>
+            <if test="answerContent != null">#{answerContent},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="sessionId != null">#{sessionId},</if>
+            <if test="isDetele != null">#{isDetele},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbDialogueProcess" parameterType="TbDialogueProcess">
+        update tb_dialogue_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="askContent != null">ask_content = #{askContent},</if>
+            <if test="answerContent != null">answer_content = #{answerContent},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="sessionId != null">session_id = #{sessionId},</if>
+            <if test="isDetele != null">is_detele = #{isDetele},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbDialogueProcessById" parameterType="Long">
+        delete from tb_dialogue_process where id = #{id}
+    </delete>
+
+    <delete id="deleteTbDialogueProcessByIds" parameterType="String">
+        delete from tb_dialogue_process where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectTbDialogueProcessListsys" parameterType="TbDialogueProcess" resultMap="TbDialogueProcessResult">
+        <include refid="selectTbDialogueProcessVo"/>
+        <where>
+                        <if test="askContent != null  and askContent != ''"> and ask_content = #{askContent}</if>
+                        <if test="answerContent != null  and answerContent != ''"> and answer_content = #{answerContent}</if>
+                        <if test="userId != null "> and user_id = #{userId}</if>
+                        <if test="sessionId != null "> and session_id = #{sessionId}</if>
+                        <if test="isDetele != null "> and is_detele = #{isDetele}</if>
+        </where>
+        ORDER BY  create_time
+    </select>
+
+    <select id="selectTbDialogueProcessByIdsys" parameterType="Long" resultMap="TbDialogueProcessResult">
+            <include refid="selectTbDialogueProcessVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertTbDialogueProcesssys" parameterType="TbDialogueProcess" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_dialogue_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="askContent != null">ask_content,</if>
+                    <if test="answerContent != null">answer_content,</if>
+                    <if test="userId != null">user_id,</if>
+                    <if test="sessionId != null">session_id,</if>
+                    <if test="isDetele != null">is_detele,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="askContent != null">#{askContent},</if>
+                    <if test="answerContent != null">#{answerContent},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="sessionId != null">#{sessionId},</if>
+                    <if test="isDetele != null">#{isDetele},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbDialogueProcesssys" parameterType="TbDialogueProcess">
+        update tb_dialogue_process
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="askContent != null">ask_content = #{askContent},</if>
+                    <if test="answerContent != null">answer_content = #{answerContent},</if>
+                    <if test="userId != null">user_id = #{userId},</if>
+                    <if test="sessionId != null">session_id = #{sessionId},</if>
+                    <if test="isDetele != null">is_detele = #{isDetele},</if>
+                    <if test="createBy != null">create_by = #{createBy},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbDialogueProcessByIdsys" parameterType="Long">
+        delete from tb_dialogue_process where id = #{id}
+    </delete>
+
+    <delete id="deleteTbDialogueProcessByIdssys" parameterType="String">
+        delete from tb_dialogue_process where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <delete id="deleteTbDialogueProcessBySessionId" parameterType="Long">
+        delete from tb_dialogue_process where session_id = #{sessionId} and user_id = #{userId}
+    </delete>
+
+</mapper>

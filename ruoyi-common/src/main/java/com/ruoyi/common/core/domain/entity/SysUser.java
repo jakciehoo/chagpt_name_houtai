@@ -80,8 +80,8 @@ public class SysUser extends BaseEntity
 
     /** 部门对象 */
     @Excels({
-        @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
-        @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
+            @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
+            @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
     })
     private SysDept dept;
 
@@ -97,6 +97,63 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+
+
+    /** 普通:1,按次:2,按时间:3 */
+    private Integer vipType;
+
+    public void setVipType(Integer vipType)
+    {
+        this.vipType = vipType;
+    }
+    public Integer getVipType()
+    {
+        return vipType;
+    }
+    /** 剩余回答次数 */
+    private Integer blanceNum;
+
+    public void setBlanceNum(Integer blanceNum)
+    {
+        this.blanceNum = blanceNum;
+    }
+    public Integer getBlanceNum()
+    {
+        return blanceNum;
+    }
+
+
+    /** 到期时间（到期后不可会话） */
+    private Date blanceDate;
+    public void setBlanceDate(Date blanceDate)
+    {
+        this.blanceDate = blanceDate;
+    }
+    public Date getBlanceDate()
+    {
+        return blanceDate;
+    }
+    /** 邀请码 */
+    private String invitationCode;
+
+    public void setInvitationCode(String invitationCode)
+    {
+        this.invitationCode = invitationCode;
+    }
+    public String getInvitationCode()
+    {
+        return invitationCode;
+    }
+
+
+    public void setOpenId(String openId)
+    {
+        this.openId = openId;
+    }
+    public String getOpenId()
+    {
+        return openId;
+    }
     public SysUser()
     {
 
@@ -308,25 +365,25 @@ public class SysUser extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userId", getUserId())
-            .append("deptId", getDeptId())
-            .append("userName", getUserName())
-            .append("nickName", getNickName())
-            .append("email", getEmail())
-            .append("phonenumber", getPhonenumber())
-            .append("sex", getSex())
-            .append("avatar", getAvatar())
-            .append("password", getPassword())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("loginIp", getLoginIp())
-            .append("loginDate", getLoginDate())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .append("dept", getDept())
-            .toString();
+                .append("userId", getUserId())
+                .append("deptId", getDeptId())
+                .append("userName", getUserName())
+                .append("nickName", getNickName())
+                .append("email", getEmail())
+                .append("phonenumber", getPhonenumber())
+                .append("sex", getSex())
+                .append("avatar", getAvatar())
+                .append("password", getPassword())
+                .append("status", getStatus())
+                .append("delFlag", getDelFlag())
+                .append("loginIp", getLoginIp())
+                .append("loginDate", getLoginDate())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .append("dept", getDept())
+                .toString();
     }
 }

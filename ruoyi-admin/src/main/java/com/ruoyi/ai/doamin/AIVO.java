@@ -1,4 +1,4 @@
-package com.ruoyi.ai;
+package com.ruoyi.ai.doamin;
 
 import lombok.Data;
 

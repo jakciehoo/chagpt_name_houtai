@@ -7,6 +7,7 @@ import cn.hutool.http.HttpUtil;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.ruoyi.ai.service.IconfigService;
 import com.ruoyi.common.utils.json.JsonUtil;
 import com.ruoyi.system.service.ISysConfigService;
 import com.tencentcloudapi.common.Credential;
@@ -28,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Service
-public class WeiXinUtil {
+public class WeiXinUtilService {
     @Autowired
-    private ISysConfigService iSysConfigService;
+    private IconfigService iconfigService;
 //    public static final String APPID = "";
 //
 //    public static final String SECRET = "123456789";
@@ -52,8 +53,8 @@ public class WeiXinUtil {
     public  void getAccessToken() {
 
 
-        String appid = iSysConfigService.selectConfigByKey("appid");
-        String secret = iSysConfigService.selectConfigByKey("secret");
+        String appid = iconfigService.selectConfigByKey("appid");
+        String secret = iconfigService.selectConfigByKey("secret");
         //利用hutool发送https请求
         Map<String, Object> paramMap = new HashMap<String, Object>(3);
         paramMap.put("appid", appid);
@@ -62,7 +63,7 @@ public class WeiXinUtil {
         // 利用Hutool工具包的HttpUtil
         Object result = HttpUtil.get("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+secret);
         JSONObject jsonObject = JSONUtil.parseObj(result);
-        redisTemplate.opsForValue().set(WeiXinUtil.ACCESS_TOKEN_KEY,jsonObject.getStr("access_token"),100, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(WeiXinUtilService.ACCESS_TOKEN_KEY,jsonObject.getStr("access_token"),100, TimeUnit.MINUTES);
     }
 
 
@@ -76,12 +77,12 @@ public class WeiXinUtil {
       * @return 1:标识含有违禁词 2: 重新请求
      */
     public  Integer msgCheck(String content) {
-        String token = (String) redisTemplate.opsForValue().get(WeiXinUtil.ACCESS_TOKEN_KEY);
+        String token = (String) redisTemplate.opsForValue().get(WeiXinUtilService.ACCESS_TOKEN_KEY);
 //        String token = "65_ziCANv9W2kEIe4CxsKyWpA8nQ_61aQw4f29YumI9sh8QyTJtmr45ENL3WV8SEHg8VtlUjE561Q7yLK0VWsqR9UDqpMJG6LQD1uWiBiJlp-Pgh9fKU1OTvrKsTKMXIBaACANYR";
         //如果token为空,则重新获取
         if (StrUtil.isBlank(token)){
             getAccessToken();
-            token = (String) redisTemplate.opsForValue().get(WeiXinUtil.ACCESS_TOKEN_KEY);
+            token = (String) redisTemplate.opsForValue().get(WeiXinUtilService.ACCESS_TOKEN_KEY);
         }
         Map<String, Object> paramMap = new HashMap<String, Object>(1);
         paramMap.put("content", content);
@@ -97,7 +98,7 @@ public class WeiXinUtil {
         JSONObject jsonObject = JSONUtil.parseObj(result);
         Integer errcode = jsonObject.getInt("errcode");
         if (errcode==40001){
-            redisTemplate.delete(WeiXinUtil.ACCESS_TOKEN_KEY);
+            redisTemplate.delete(WeiXinUtilService.ACCESS_TOKEN_KEY);
         }
         return jsonObject.getInt("errcode");
     }
@@ -151,8 +152,8 @@ public class WeiXinUtil {
      * @param js_code - 小程序登陆后获取的
      */
     public  JSONObject getSessionkey(String js_code) {
-        String appid = iSysConfigService.selectConfigByKey("appid");
-        String secret = iSysConfigService.selectConfigByKey("secret");
+        String appid = iconfigService.selectConfigByKey("appid");
+        String secret = iconfigService.selectConfigByKey("secret");
         // 利用Hutool工具包的HttpUtil
         Object result = HttpUtil.get("https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code&appid="+appid+"&secret="+secret+"&js_code="+js_code);
         JSONObject jsonObject = JSONUtil.parseObj(result);

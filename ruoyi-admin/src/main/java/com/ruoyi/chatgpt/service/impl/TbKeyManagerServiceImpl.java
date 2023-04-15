@@ -3,16 +3,13 @@ package com.ruoyi.chatgpt.service.impl;
 import java.util.*;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.ai.Gpt35TurboVO;
-import com.ruoyi.chatgpt.domain.TbAnsweEmploy;
+import com.ruoyi.ai.doamin.Gpt35TurboVO;
+import com.ruoyi.ai.service.IconfigService;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.json.JsonUtil;
-import com.ruoyi.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -37,7 +34,7 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
     @Autowired
     private TbKeyManagerMapper tbKeyManagerMapper;
     @Autowired
-    private ISysConfigService iSysConfigService;
+    private IconfigService iconfigService;
     /**
      * 查询key管理
      *
@@ -351,7 +348,7 @@ public class TbKeyManagerServiceImpl implements ITbKeyManagerService
      */
     @Override
     public String getproxyUrl(){
-        String proxy_url = iSysConfigService.selectConfigByKey("proxy_url");
+        String proxy_url = iconfigService.selectConfigByKey("proxy_url");
         //请求URL
         String url = "https://api.openai.com/v1/chat/completions";
 

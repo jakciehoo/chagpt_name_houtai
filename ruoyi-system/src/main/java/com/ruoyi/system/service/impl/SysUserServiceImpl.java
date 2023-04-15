@@ -565,4 +565,26 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.selectAuthUserListByUserId(userId);
     }
+
+    public int updateUserBlance(SysUser user)
+    {
+        return userMapper.updateUser(user);
+    }
+
+
+    public SysUser selectUserByintiveCode(String intivate)
+    {
+        return userMapper.selectUserByintiveCode(intivate);
+    }
+
+
+    /**
+     * 校验openID码是否唯一
+     *
+     * @param openId 用户信息
+     * @return 结果
+     */
+    public SysUser checkOpenIDUnique(String openId){
+        return  userMapper.checkOpenIDUnique(openId);
+    }
 }

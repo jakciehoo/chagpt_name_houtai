@@ -1,5 +1,9 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.ip.IpUtils;
+import com.ruoyi.system.service.ISysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -10,14 +14,13 @@ import com.ruoyi.common.core.domain.model.RegisterBody;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.CaptchaExpireException;
-import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 /**
  * 注册校验方法
@@ -28,6 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class SysRegisterService
 {
     @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private ISysRoleService iSysRoleService;
+    @Autowired
     private ISysUserService userService;
 
     @Autowired
@@ -36,6 +43,8 @@ public class SysRegisterService
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private SysPermissionService sysPermissionService;
     /**
      * 注册
      */
@@ -85,6 +94,7 @@ public class SysRegisterService
             }
             else
             {
+                iSysRoleService.insertDefaultRole(sysUser.getUserId());
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }
@@ -106,7 +116,7 @@ public class SysRegisterService
         }
         else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(sysUser)))
         {
-            msg = "保存用户'" + username + "'失败，注册账号已存在";
+            throw new RuntimeException("请重新注册");
         }
         else
         {
@@ -120,6 +130,16 @@ public class SysRegisterService
             else
             {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
+                recordLoginInfo(sysUser.getUserId());
+                Set<String> menuPermission = sysPermissionService.getMenuPermission(sysUser);
+                System.out.println(menuPermission);
+                LoginUser loginUser = new LoginUser();
+                loginUser.setPermissions(menuPermission);
+                loginUser.setDeptId(sysUser.getDeptId());
+                loginUser.setUserId(sysUser.getUserId());
+                loginUser.setUser(sysUser);
+                // 生成token
+                return tokenService.createToken(loginUser);
             }
         }
         return msg;
@@ -148,5 +168,19 @@ public class SysRegisterService
         {
             throw new CaptchaException();
         }
+    }
+
+    /**
+     * 记录登录信息
+     *-
+     * @param userId 用户ID
+     */
+    public void recordLoginInfo(Long userId)
+    {
+        SysUser sysUser = new SysUser();
+        sysUser.setUserId(userId);
+        sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+        sysUser.setLoginDate(DateUtils.getNowDate());
+        userService.updateUserProfile(sysUser);
     }
 }

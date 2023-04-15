@@ -221,4 +221,29 @@ public interface ISysUserService
      * @return 授权列表
      */
     public List<SysAuthUser> selectAuthUserListByUserId(Long userId);
+
+    /**
+     * 修改用户信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    public int updateUserBlance(SysUser user);
+
+    /**
+     * 通过用户名查询用户
+     *
+     * @param intivate 用户名
+     * @return 用户对象信息
+     */
+    public SysUser selectUserByintiveCode(String intivate);
+
+
+    /**
+     * 校验openID码是否唯一
+     *
+     * @param openId 用户信息
+     * @return 结果
+     */
+    public SysUser checkOpenIDUnique(String openId);
 }

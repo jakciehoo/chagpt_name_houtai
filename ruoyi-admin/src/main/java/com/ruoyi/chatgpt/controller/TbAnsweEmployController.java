@@ -28,7 +28,7 @@ import com.ruoyi.common.utils.SecurityUtils;
  * @date 2023-02-10
  */
 @RestController
-@RequestMapping("/chatgpt/employ")
+@RequestMapping("/cricleai/employ")
 public class TbAnsweEmployController extends BaseController
 {
     @Autowired
@@ -37,13 +37,11 @@ public class TbAnsweEmployController extends BaseController
     /**
      * 查询回答收录列列表
      */
-//    @PreAuthorize("@ss.hasPermi('chatgpt:employ:list')")
     @GetMapping("/list")
     public TableDataInfo list(TbAnsweEmploy tbAnsweEmploy)
     {
-//        Long userId = SecurityUtils.getUserId();
-//        tbAnsweEmploy.setUserId(userId);
-        tbAnsweEmploy.setIsShow(1l);
+        Long userId = SecurityUtils.getUserId();
+        tbAnsweEmploy.setUserId(userId);
         startPage();
         List<TbAnsweEmploy> list = tbAnsweEmployService.selectTbAnsweEmployList(tbAnsweEmploy);
         return getDataTable(list);

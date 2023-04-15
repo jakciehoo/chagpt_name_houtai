@@ -1,9 +1,9 @@
-package com.ruoyi.ai;
+package com.ruoyi.ai.doamin;
 
+import com.ruoyi.ai.doamin.ContentVo;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.Map;
 
 @Data
 public class ReturnAnswerVo {
@@ -16,14 +16,6 @@ public class ReturnAnswerVo {
      1是自己提问的,2是机器人
     */
     private Integer fromId;
-//    /**
-//     * 提问名称
-//     */
-//    private String name;
-//    /**
-//     * 头像
-//     */
-//    private String avatarUrl;
     /**
      * 内容
      */
@@ -35,7 +27,3 @@ public class ReturnAnswerVo {
 }
 
 
-@Data
-class ContentVo {
-    private  String text;
-}

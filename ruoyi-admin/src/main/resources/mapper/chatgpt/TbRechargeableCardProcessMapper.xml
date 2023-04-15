@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatgpt.mapper.TbRechargeableCardProcessMapper">
+
+    <resultMap type="TbRechargeableCardProcess" id="TbRechargeableCardProcessResult">
+        <result property="id" column="id"/>
+        <result property="cardNumber" column="card_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="isDetele" column="is_detele"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+
+        <result property="cardType" column="card_type"/>
+        <result property="addNum" column="add_num"/>
+        <result property="addDate" column="add_date"/>
+    </resultMap>
+
+    <sql id="selectTbRechargeableCardProcessVo">
+        select card_type,
+               add_num,
+               add_date,
+               id,
+               card_number,
+               user_id,
+               batch_id,
+               is_detele,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from tb_rechargeable_card_process
+    </sql>
+
+    <select id="selectTbRechargeableCardProcessList" parameterType="TbRechargeableCardProcess"
+            resultMap="TbRechargeableCardProcessResult">
+        <include refid="selectTbRechargeableCardProcessVo"/>
+        <where>
+            <if test="cardNumber != null  and cardNumber != ''">and card_number = #{cardNumber}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="batchId != null ">and batch_id = #{batchId}</if>
+            <if test="isDetele != null ">and is_detele = #{isDetele}</if>
+            <if test="cardType != null ">and card_type = #{cardType}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectTbRechargeableCardProcessById" parameterType="Long" resultMap="TbRechargeableCardProcessResult">
+        <include refid="selectTbRechargeableCardProcessVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbRechargeableCardProcess" parameterType="TbRechargeableCardProcess" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into tb_rechargeable_card_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardNumber != null">card_number,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="batchId != null">batch_id,</if>
+            <if test="isDetele != null">is_detele,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="addNum != null">add_num,</if>
+            <if test="addDate != null">add_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardNumber != null">#{cardNumber},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="batchId != null">#{batchId},</if>
+            <if test="isDetele != null">#{isDetele},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="addNum != null">#{addNum},</if>
+            <if test="addDate != null">#{addDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTbRechargeableCardProcess" parameterType="TbRechargeableCardProcess">
+        update tb_rechargeable_card_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardNumber != null">card_number = #{cardNumber},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="batchId != null">batch_id = #{batchId},</if>
+            <if test="isDetele != null">is_detele = #{isDetele},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="addNum != null">add_num = #{addNum},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbRechargeableCardProcessById" parameterType="Long">
+        delete
+        from tb_rechargeable_card_process
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTbRechargeableCardProcessByIds" parameterType="String">
+        delete from tb_rechargeable_card_process where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectTbRechargeableCardProcessListsys" parameterType="TbRechargeableCardProcess"
+            resultMap="TbRechargeableCardProcessResult">
+        <include refid="selectTbRechargeableCardProcessVo"/>
+        <where>
+            <if test="cardNumber != null  and cardNumber != ''">and card_number = #{cardNumber}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="batchId != null ">and batch_id = #{batchId}</if>
+            <if test="isDetele != null ">and is_detele = #{isDetele}</if>
+            <if test="cardType != null ">and card_type = #{cardType}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectTbRechargeableCardProcessByIdsys" parameterType="Long"
+            resultMap="TbRechargeableCardProcessResult">
+        <include refid="selectTbRechargeableCardProcessVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbRechargeableCardProcesssys" parameterType="TbRechargeableCardProcess" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into tb_rechargeable_card_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardNumber != null">card_number,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="batchId != null">batch_id,</if>
+            <if test="isDetele != null">is_detele,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="addNum != null">add_num,</if>
+            <if test="addDate != null">add_date,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardNumber != null">#{cardNumber},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="batchId != null">#{batchId},</if>
+            <if test="isDetele != null">#{isDetele},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="addNum != null">#{addNum},</if>
+            <if test="addDate != null">#{addDate},</if>
+       </trim>
+    </insert>
+
+    <update id="updateTbRechargeableCardProcesssys" parameterType="TbRechargeableCardProcess">
+        update tb_rechargeable_card_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardNumber != null">card_number = #{cardNumber},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="batchId != null">batch_id = #{batchId},</if>
+            <if test="isDetele != null">is_detele = #{isDetele},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="addNum != null">add_num = #{addNum},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>  </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbRechargeableCardProcessByIdsys" parameterType="Long">
+        delete
+        from tb_rechargeable_card_process
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTbRechargeableCardProcessByIdssys" parameterType="String">
+        delete from tb_rechargeable_card_process where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteTbRechargeableCardProcessByBathIdsys" parameterType="Long">
+        delete
+        from tb_rechargeable_card_process
+        where batch_id = #{batchId}
+    </delete>
+
+</mapper>
