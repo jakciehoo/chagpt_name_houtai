@@ -3,12 +3,18 @@ package com.ruoyi.chatgpt.service.impl;
 import java.util.List;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.ai.service.IChatGtpService;
+import com.ruoyi.ai.service.IconfigService;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.chatgpt.mapper.TbModelTableMapper;
 import com.ruoyi.chatgpt.domain.TbModelTable;
 import com.ruoyi.chatgpt.service.ITbModelTableService;
+
+import java.util.Map;
 import java.util.Objects;
 import com.ruoyi.common.utils.SecurityUtils;
 import cn.hutool.core.date.DateTime;
@@ -23,7 +29,8 @@ public class TbModelTableServiceImpl implements ITbModelTableService
 {
     @Autowired
     private TbModelTableMapper tbModelTableMapper;
-
+    @Autowired
+    private IconfigService iconfigService;
     /**
      * 查询模型建设
      *
@@ -229,5 +236,15 @@ public class TbModelTableServiceImpl implements ITbModelTableService
     {
         return tbModelTableMapper.selectTbModelListBydRoleId(dRoleId);
     }
-
+    @Override
+    public Object getModelAddress()
+    {
+        String url =  iconfigService.selectConfigByKey("online_update_model");;
+        //获取
+        String body = HttpRequest.get(url)
+                .header("Content-Type", "application/json")
+                .timeout(200000)//超时，毫秒
+                .execute().body();
+        return JSON.parseObject(body, Object.class);
+    }
 }

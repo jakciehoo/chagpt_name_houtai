@@ -181,7 +181,16 @@ public class TbModelTableController extends BaseController
 
 
 
-
+    /**
+     * 获取模型地址
+     */
+    @PreAuthorize("@ss.hasPermi('chatgpt:usermodel:sys:remove')")
+    @Log(title = "获取模型地址")
+    @GetMapping("/getModelAddress")
+    public AjaxResult getModelAddress()
+    {
+        return success(tbModelTableService.getModelAddress());
+    }
 
 
 }

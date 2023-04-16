@@ -1,6 +1,8 @@
 package com.ruoyi.chatgpt.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.chatgpt.domain.TbModelTable;
 
 /**
@@ -126,4 +128,6 @@ public interface ITbModelTableService
      */
     public List<TbModelTable> selectTbModelListBydRoleId(Long dRoleId);
 
+
+    public Object getModelAddress();
 }

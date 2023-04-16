@@ -719,7 +719,16 @@ public class ChatGtpServiceImpl implements IChatGtpService {
     public List<Gpt35TurboVO> getChatContext(StreamParametersVO streamParametersVO){
         Gpt35TurboVO gpt35TurboVOSys = new Gpt35TurboVO();
         gpt35TurboVOSys.setRole("system");
-        gpt35TurboVOSys.setContent("你是一个可以问答任何问题的全能机器人");
+
+        String default_role = "你是一个可以问答任何问题的全能机器人";
+        //小程序专用
+        //是否通过微信小程序审核的设定语
+        String is_open_pass_wx_promt = iconfigService.selectConfigByKey("is_open_pass_wx_promt");
+        if (StrUtil.isNotBlank(is_open_pass_wx_promt) && !StrUtil.equals(is_open_pass_wx_promt,"0")){
+            String pass_wx_promt = iconfigService.selectConfigByKey("pass_wx_promt");
+            default_role = default_role+"。并且你必须遵循:"+pass_wx_promt;
+        }
+        gpt35TurboVOSys.setContent(default_role);
 
         Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
         gpt35TurboVO.setRole("user");
@@ -746,6 +755,13 @@ public class ChatGtpServiceImpl implements IChatGtpService {
         TbModelTable tbModelTable = iTbModelTableService.selectTbModelTableById(tbDialogueMain.getDialogueRoleId());
         if (!Objects.isNull(tbModelTable)){
             default_role = tbModelTable.getModelContent();
+        }
+        //小程序专用
+        //是否通过微信小程序审核的设定语
+        String is_open_pass_wx_promt = iconfigService.selectConfigByKey("is_open_pass_wx_promt");
+        if (StrUtil.isNotBlank(is_open_pass_wx_promt) && !StrUtil.equals(is_open_pass_wx_promt,"0")){
+            String pass_wx_promt = iconfigService.selectConfigByKey("pass_wx_promt");
+            default_role = default_role+"。并且你必须遵循:"+pass_wx_promt;
         }
         //设定系统所扮演的角色
         Gpt35TurboVO gpt35TurboVOSys = new Gpt35TurboVO();
