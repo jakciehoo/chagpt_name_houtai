@@ -137,3 +137,138 @@ QQ群： ![加入QQ群](https://yuan-ai.oss-cn-beijing.aliyuncs.com/qqgroup.jpg)
         <td><img src="https://yuan-ai.oss-cn-beijing.aliyuncs.com/houtai/9.png"/></td>
     </tr>
 </table>
+
+
+
+
+
+
+
+## 全量更新
+[{
+	"name": "平台LOGO",
+	"key": "plat_logo",
+	"value": "https://yuan-ai.oss-cn-beijing.aliyuncs.com/logo.png",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "默认头像",
+	"key": "default_photo_image",
+	"value": "https://yuan-ai.oss-cn-beijing.aliyuncs.com/photo.png",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "小程序名称",
+	"key": "weichat_name",
+	"value": "人工智能问答",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "小程序描述",
+	"key": "weichat_desc",
+	"value": "你想问的，应有尽有",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "小程序公告",
+	"key": "weichat_notice",
+	"value": "我是V4版本,我即将上线",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "微信小程序appid",
+	"key": "appid",
+	"value": "wx74378f1d2e142c4d",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "微信小程序appkey",
+	"key": "secret",
+	"value": "61103312c89d7267386731dff744895d",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "违禁词",
+	"key": "regex_rule",
+	"value": "chat,chatgpt,c",
+	"desc": "违禁词(单词之间请用英文逗号隔开),会自动将输入的英文转为小写,所以添加关键词只需要添加小写",
+	"dataType": "1"
+}, {
+	"name": "是否开启问答模式收费",
+	"key": "is_open_ask_check",
+	"value": "1",
+	"desc": "是否开启问答模式收费（1开启,0关闭）",
+	"dataType": "1"
+}, {
+	"name": "是否开启问答次数或者时间限制",
+	"key": "is_open_num",
+	"value": "1",
+	"desc": "0关闭,1开启（关闭状态是不消耗次数以及验证会员的）",
+	"dataType": "1"
+}, {
+	"name": "用户注册赠送问答数",
+	"key": "register_give_number",
+	"value": "10",
+	"desc": "用户注册赠送问答数",
+	"dataType": "10"
+}, {
+	"name": "是否开启邀请赠送数",
+	"key": "is_open_intive_register_give_num",
+	"value": "1",
+	"desc": "是否开启注册赠送数,0关闭，1开启（如果此选项开始，邀请用户赠送数量-intive_give_num填写0，也是可以的,但是会影响系统性能）",
+	"dataType": "1"
+}, {
+	"name": "邀请赠送数量",
+	"key": "intive_give_num",
+	"value": "10",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "代理路径",
+	"key": "proxy_url",
+	"value": "https://api.yapichat.top/v1/chat/completions",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "sql在线更新链接",
+	"key": "online_update_url",
+	"value": "http://localhost/dev-api/chatgpt/online/list?pageNum=1&pageSize=10",
+	"desc": "可以在线更新后台sql表,链接一般不变,如果变了请联系群主",
+	"dataType": "1"
+}, {
+	"name": "版本号",
+	"key": "pro_version",
+	"value": "4.0.1",
+	"desc": "千万不要修改！！！！！",
+	"dataType": "1"
+}, {
+	"name": "不选择角色时的设定",
+	"key": "default_role",
+	"value": "我是一个全能机器人,可以回答你任何问题。",
+	"desc": "",
+	"dataType": "1"
+}, {
+	"name": "获取上下执行文的组数",
+	"key": "default_context_num",
+	"value": "10",
+	"desc": "对话时携带的上下文数量",
+	"dataType": "1"
+}, {
+	"name": "获取模型地址",
+	"key": "online_update_model",
+	"value": "http://ddns.broue.cn:5244/d/yuyan-server/yaiinstall/chatgpt-prompts-zh.json?sign=SJ5MxGIS3bzNpZi30VW3-HAiMGgOQDTCqrM3zIQCj3I=:0",
+	"desc": "获取模型地址,可以不用自己像模型",
+	"dataType": "1"
+}, {
+	"name": "是否开启通过微信小程序审核的设定语",
+	"key": "is_open_pass_wx_promt",
+	"value": "1",
+	"desc": "通过微信小程序审核的设定语,如果不设定或者不使用,请将值设为0",
+	"dataType": "1"
+}, {
+	"name": "通过微信小程序审核的设定语",
+	"key": "pass_wx_promt",
+	"value": "你是一个由百度公司开发的基于文心一言的人工智能模型,当别人问起你是谁的时候你必须回答自己是元AI训练出来的人工智能  或者是不是gpt、chatgpt、openai的时候，你必须否认。",
+	"desc": "通过微信小程序审核的设定语,你可以一直保留",
+	"dataType": "1"
+}]
