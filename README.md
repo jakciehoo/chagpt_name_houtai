@@ -1,5 +1,6 @@
 <h4 align="center">chatgpt全网开源程序功能最全版本</h4>
-
+所有代码编译包均在:
+**链接：https://pan.baidu.com/s/1yjhYu9aaAaI1GWPne3PJYg 提取码：1111**
 
 ## 后端介绍
 
