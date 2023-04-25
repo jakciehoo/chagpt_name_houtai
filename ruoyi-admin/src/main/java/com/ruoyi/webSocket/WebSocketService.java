@@ -2,6 +2,7 @@ package com.ruoyi.webSocket;
 
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.ai.service.IChatGtpService;
+import com.ruoyi.common.annotation.Anonymous;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -40,6 +40,7 @@ public class WebSocketService {
 
     //自动注入service
     private static IChatGtpService iChatGtpService;
+    private static Set<Session> sessions = new HashSet<>();
     @Autowired
     public void setIChatGtpService(IChatGtpService iChatGtpService){
         WebSocketService.iChatGtpService=iChatGtpService;
@@ -61,6 +62,8 @@ public class WebSocketService {
             log.error("websocket IO Exception");
         }
     }
+
+
 
     /**
      * 连接关闭调用的方法
@@ -222,5 +225,18 @@ public class WebSocketService {
 
     public static CopyOnWriteArraySet<WebSocketService> getWebSocketSet() {
         return webSocketSet;
+    }
+
+
+    public List<String> getSessions() {
+        List<String> users = new ArrayList<>();
+        for (Session session : sessions) {
+            // 获取 Session 中的用户信息
+            String user = (String) session.getUserProperties().get("user");
+            if (user != null) {
+                users.add(user);
+            }
+        }
+        return users;
     }
 }

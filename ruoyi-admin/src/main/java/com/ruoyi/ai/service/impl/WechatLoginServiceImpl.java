@@ -37,13 +37,6 @@ public class WechatLoginServiceImpl implements IWechatLoginService {
     private SysLoginService loginService;
     @Autowired
     private IconfigService iconfigService;
-
-    @Autowired
-    private SysRegisterService sysRegisterService;
-    @Autowired
-    private  ISysRoleService iSysRoleService;
-
-
     @Autowired
     private IChatGtpService iChatGtpService;
     @Autowired
@@ -52,6 +45,10 @@ public class WechatLoginServiceImpl implements IWechatLoginService {
     private TokenService tokenService;
     @Autowired
     private ITbFrequencyConsumptionLogService iTbFrequencyConsumptionLogService;
+    @Autowired
+    private  ISysRoleService iSysRoleService;
+    @Autowired
+    private SysRegisterService sysRegisterService;
     /**
      * 注册
      */
@@ -71,7 +68,11 @@ public class WechatLoginServiceImpl implements IWechatLoginService {
         //注册获取普通用户的权限
         SysUser sysUserRegister = new SysUser();
         sysUserRegister.setUserName(openId);
-        String  nickName = "元AI_"+ StrUtil.sub(openId,3,9)+ RandomUtil.randomNumbers(1);
+        String username_before = iconfigService.selectConfigByKey("username_before");
+        if (StrUtil.isBlank(username_before)){
+            username_before= "元AI";
+        }
+        String  nickName = username_before+"_"+ StrUtil.sub(openId,3,9)+ RandomUtil.randomNumbers(1);
         sysUserRegister.setNickName(nickName);
         sysUserRegister.setAvatar(defaultPhotoImage);
         sysUserRegister.setOpenId(openId);

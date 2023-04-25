@@ -9,4 +9,6 @@ import javax.servlet.http.HttpSession;
 public interface IWechatLoginService {
     AjaxResult wxregister(RegisterOrLoginVO registerOrLoginVO,HttpSession httpSession);
     AjaxResult wxLogin(SysUser sysUser, HttpSession httpSession);
+
+    void intiveAddNum(RegisterOrLoginVO registerOrLoginVO,SysUser sysUserRegister);
 }

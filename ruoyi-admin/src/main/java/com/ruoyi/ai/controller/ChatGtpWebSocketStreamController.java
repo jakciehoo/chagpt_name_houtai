@@ -1,30 +1,18 @@
 package com.ruoyi.ai.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
-import com.ruoyi.ai.*;
 import com.ruoyi.ai.doamin.*;
 import com.ruoyi.ai.service.IChatGtpService;
 import com.ruoyi.ai.service.IconfigService;
-import com.ruoyi.chatgpt.domain.TbAnsweEmploy;
-import com.ruoyi.chatgpt.domain.TbAnsweUser;
-import com.ruoyi.chatgpt.domain.TbKeyManager;
 import com.ruoyi.chatgpt.service.ITbAnsweEmployService;
-import com.ruoyi.chatgpt.service.ITbAnsweUserService;
-import com.ruoyi.chatgpt.service.ITbKeyManagerService;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.json.JsonUtil;
+import com.ruoyi.util.weixin.WxCommonUtilService;
 import com.ruoyi.webSocket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.ruoyi.common.core.domain.AjaxResult.error;
@@ -46,7 +34,7 @@ public class ChatGtpWebSocketStreamController {
     @Autowired
     private IChatGtpService iChatGtpService;
     @Autowired
-    private WeiXinUtilService weiXinUtil;
+    private WxCommonUtilService weiXinUtil;
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
 

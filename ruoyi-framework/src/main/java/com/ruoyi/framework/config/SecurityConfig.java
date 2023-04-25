@@ -109,10 +109,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login","/wxlogin/*", "/system/auth/binding/*", "/system/auth/social-login/*", "/register", "/captchaImage", "/cricleai/employ/list").permitAll()
+                .antMatchers("/login", "/captcha/get", "/captcha/check","/wxlogin/*", "/system/auth/binding/*", "/system/auth/social-login/*", "/register", "/captchaImage", "/cricleai/employ/list").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**","/ai/**").permitAll()
+                .antMatchers("/swagger-ui.html","/websocket/**", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**","/ai/**").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

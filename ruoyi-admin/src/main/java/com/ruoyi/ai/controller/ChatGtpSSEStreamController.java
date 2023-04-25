@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.ai.*;
 import com.ruoyi.ai.doamin.*;
 import com.ruoyi.ai.service.IChatGtpService;
 import com.ruoyi.ai.service.IconfigService;
@@ -15,14 +14,18 @@ import com.ruoyi.chatgpt.domain.TbKeyManager;
 import com.ruoyi.chatgpt.service.ITbAnsweEmployService;
 import com.ruoyi.chatgpt.service.ITbAnsweUserService;
 import com.ruoyi.chatgpt.service.ITbKeyManagerService;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.json.JsonUtil;
+import com.ruoyi.util.weixin.WxCommonUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.ruoyi.common.core.domain.AjaxResult.error;
 import static com.ruoyi.common.core.domain.AjaxResult.success;
@@ -43,7 +46,7 @@ public class ChatGtpSSEStreamController {
     @Autowired
     private IChatGtpService iChatGtpService;
     @Autowired
-    private WeiXinUtilService weiXinUtil;
+    private WxCommonUtilService weiXinUtil;
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
 
@@ -183,16 +186,6 @@ public class ChatGtpSSEStreamController {
     }
 
 
-    /**
-     * 小程序获取配置信息
-     *
-     * @return
-     */
-    @PostMapping("/configInfo")
-    public AjaxResult chat() {
-        return success(iChatGtpService.getConfigInfo());
-    }
-
 
     /**
      * 检查是否回复中
@@ -212,117 +205,39 @@ public class ChatGtpSSEStreamController {
     }
 
 
-    @PostMapping("/reSetChat")
-    public AjaxResult reSetChat(String openId) {
-        redisTemplate.delete(openId + "_chat");
-        return success("重置成功");
-    }
-
-    @PostMapping("/chatSave")
-    public AjaxResult chatSave(@RequestBody TbAnsweUser tbAnsweUser) {
-
-        if (StrUtil.isBlank(tbAnsweUser.getAnsweUserOpenid())) {
-            return error("请您先登陆");
-        }
-        if (StrUtil.isBlank(tbAnsweUser.getAnsweUserJson())) {
-            return error("内容为空");
-        }
-        TbAnsweUser tbAnsweUserSelect = iTbAnsweUserService.selectTbAnsweUserByOpenId(tbAnsweUser.getAnsweUserOpenid());
-        if (Objects.isNull(tbAnsweUserSelect)) {
-            return error("您暂无授权");
-        }
-        tbAnsweUserSelect.setAnsweUserJson(tbAnsweUser.getAnsweUserJson());
-        int i = iTbAnsweUserService.updateTbAnsweUser(tbAnsweUserSelect);
-        if (i == 1) {
-            return success("请求成功");
-        }
-        return error("请求错误");
-    }
-
-
     /**
-     * 获取对话内容
+     * 小程序获取配置信息
      *
-     * @param requestKeyVO
      * @return
      */
-    @PostMapping("/requestKey")
-    public AjaxResult requestKey(@RequestBody RequestKeyVO requestKeyVO) {
-        //是否检查
-        String is_check_ask = iconfigService.selectConfigByKey("is_check_ask");
-        if (StrUtil.isBlank(requestKeyVO.getPrompt())) {
-            return error("输入内容为空");
-        }
-        if (StrUtil.equals(is_check_ask, "1")) {
-            // 通知内容添加文本铭感词汇过滤
-            //其余错误见返回码说明
-            //正常返回0
-            Integer isSensitive = weiXinUtil.msgCheck(requestKeyVO.getPrompt());
-            //当图片文件内含有敏感内容，则返回87014
-            if (Objects.isNull(isSensitive)) {
-                return error("请重新访问");
-            }
-            if (isSensitive == 87014) {
-                return error("含有违禁词");
-            } else if (isSensitive != 0) {
-                return error("查询出错,请联系管理");
-            }
-        }
-        String body = "";
-        try {
-            AjaxResult ajaxResult = officalGetDataAsk();
-            //如果不等于正确的加其他逻辑
-            Integer codeR = (Integer) ajaxResult.get("code");
-            if (codeR != 200) {
-                return ajaxResult;
-            }
-            String apikey = (String) ajaxResult.get("data");
-            //请求URL
-            String url =  iTbKeyManagerService.getproxyUrl();
-            Gpt35TurboVO gpt35TurboVO = new Gpt35TurboVO();
-            gpt35TurboVO.setRole("user");
-            gpt35TurboVO.setContent(requestKeyVO.getPrompt());
-            List<Gpt35TurboVO> objects = new ArrayList<>();
-            objects.add(gpt35TurboVO);
-            Map<Object, Object> objectObjectHashMap = new HashMap<>();
-            objectObjectHashMap.put("model", "gpt-3.5-turbo");
-            objectObjectHashMap.put("messages", objects);
-            String postData = JSONUtil.toJsonStr(objectObjectHashMap);
-            body = HttpRequest.post(url)
-                    .header("Authorization", "Bearer " + apikey)//头信息，多个头信息多次调用此方法即可
-                    .header("Content-Type", "application/json")
-                    .body(postData)//表单内容
-                    .timeout(200000)//超时，毫秒
-                    .execute().body();
-        } catch (Exception e) {
-            return error("请重新资讯");
-        }
-        if (StrUtil.isNotBlank(body)) {
-            if (StrUtil.contains(body, "statusCode") && StrUtil.contains(body, "TooManyRequests")) {
-                return error("请求错误");
-            }
-            if (StrUtil.contains(body, "code") && Objects.isNull(JsonUtil.parseMiddleData(body, "code"))) {
-                //刷新
-                redisTemplate.delete("apikey");
-                officalGetDataAsk();
-                return error("请重新发送");
-            } else if (StrUtil.contains(JsonUtil.parseMiddleData(body, "model"), "gpt-3.5-turbo")) {
-                return success(JsonUtil.parseMiddleData(body, "msg"));
-            } else {
-                return error("我没有搜索出来答案");
-            }
+    @Anonymous
+    @PostMapping("/configInfo")
+    public AjaxResult chat() {
+        return success(iChatGtpService.getConfigInfo());
+    }
 
-//            TbAnsweEmploy tbAnsweEmploy = new TbAnsweEmploy();
-//            tbAnsweEmploy.setAnserTitle(requestKeyVO.getPrompt());
-//            tbAnsweEmploy.setAnserContent(body);
-//            int i = iTbAnsweEmployService.insertTbAnsweEmployAuto(tbAnsweEmploy);
-//            if (i==1){
-//                return success(body);
-//            }else {
-//                return error("请求错误");
-//            }
+
+
+    @Anonymous
+    @GetMapping("/chatBot1")
+    public void chatBo1t(HttpServletResponse httpServletResponse)  {
+        try {
+            httpServletResponse.setContentType("text/event-stream");
+            httpServletResponse.setCharacterEncoding("utf-8");
+            PrintWriter pw = httpServletResponse.getWriter();
+            int i=0;
+            while (i<10){
+                TimeUnit.MILLISECONDS.sleep(50);
+                //第一段
+                pw.write("retry:"+i+"\n");
+                pw.flush();
+                i++;
+            }
+            pw.write("data:stop\n\n");
+            pw.flush();
+        }catch (Exception e){
+            System.out.println("11111");
         }
-        return error("请求错误");
     }
 
 

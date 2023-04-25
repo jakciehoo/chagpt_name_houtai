@@ -1,14 +1,13 @@
 package com.ruoyi.ai.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.ai.WeiXinUtilService;
+import com.ruoyi.util.weixin.WxCommonUtilService;
 import com.ruoyi.ai.service.disableword.SensitiveFilterService;
 import com.ruoyi.ai.doamin.*;
 import com.ruoyi.ai.service.IChatGtpService;
@@ -16,7 +15,6 @@ import com.ruoyi.ai.service.IExtendSysUserService;
 import com.ruoyi.ai.service.IconfigService;
 import com.ruoyi.chatgpt.domain.*;
 import com.ruoyi.chatgpt.service.*;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.json.JsonUtil;
 import com.ruoyi.system.domain.SysConfig;
@@ -55,7 +53,7 @@ public class ChatGtpServiceImpl implements IChatGtpService {
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
     @Autowired
-    private WeiXinUtilService weiXinUtilService;
+    private WxCommonUtilService wxCommonUtilService;
     @Autowired
     private ITbKeyManagerService iTbKeyManagerService;
     @Autowired
@@ -74,7 +72,18 @@ public class ChatGtpServiceImpl implements IChatGtpService {
     private RedisLock redisLock;
     @Override
     public Map<String, Object> getConfigInfo() {
+        List<String> noShowLists = new ArrayList<>();
+        noShowLists.add("default_role");
+        noShowLists.add("pass_wx_promt");
+        noShowLists.add("online_update_url");
+        noShowLists.add("online_update_model");
+        noShowLists.add("proxy_url");
+        noShowLists.add("regex_rule");
+        noShowLists.add("secret");
+        noShowLists.add("wx_h5_secret");
+        noShowLists.add("username_before");
         Map<String, Object> baseConfigMap = new HashMap<>();
+        Map<String, Object> objectObjectHashMap = new HashMap<>();
         try {
             //首先获取存放数据的json字段
             //小程序名称
@@ -87,10 +96,14 @@ public class ChatGtpServiceImpl implements IChatGtpService {
                     }
                 }
             }
+            objectObjectHashMap = baseConfigMap;
+            for (String removeStr:noShowLists){
+                objectObjectHashMap.remove(removeStr);
+            }
         }catch (Exception e){
             throw new RuntimeException("配置获取失败");
         }
-        return baseConfigMap;
+        return objectObjectHashMap;
 
     }
 
@@ -188,11 +201,16 @@ public class ChatGtpServiceImpl implements IChatGtpService {
         Map<String, SettingVO> settingVOListBeforeMap = settingVOListBefore.stream().collect(Collectors.toMap(SettingVO::getKey, e -> e));
         List<SettingVO> settingVOListUpdateTemp =  new ArrayList<>();
         for (SettingVO settingVO:settingVOListUpdate){
+            //旧配置是否包含目前的配置
             SettingVO settingVOBefore = settingVOListBeforeMap.get(settingVO.getKey());
             if (Objects.isNull(settingVOBefore)){
                 //如果为空,则说明之前是没有的
                 settingVOListUpdateTemp.add(settingVO);
             }else {
+                //更新属性的名称以及描述,以及类型
+                settingVOBefore.setName(settingVO.getName());
+                settingVOBefore.setDesc(settingVO.getDesc());
+                settingVOBefore.setDataType(settingVO.getDataType());
                 settingVOListUpdateTemp.add(settingVOBefore);
             }
         }
@@ -233,35 +251,55 @@ public class ChatGtpServiceImpl implements IChatGtpService {
 
     @Override
     public void chatBotSseStream(StreamParametersVO streamParametersVO, HttpServletResponse httpServletResponse) {
+        String lockName = "aks_" + SecurityUtils.getUserId();
         try {
-            if (StrUtil.isBlank(streamParametersVO.getPrompt())){
-                throw new RuntimeException("内容不可为空");
+            RLock rLock = redisLock.getRLock(lockName);
+            boolean locked = rLock.isLocked();
+            if (locked){
+                throw new RuntimeException("回复中");
             }
+            //对同一用户访问加锁
+            redisLock.lock(lockName);
+            this.chatBefore(streamParametersVO);
             httpServletResponse.setContentType("text/event-stream");
             httpServletResponse.setCharacterEncoding("utf-8");
             TbDialogueMain tbDialogueMain = this.inMedothJust(streamParametersVO);
             InputStream is =  this.sendRequestBefore(streamParametersVO,tbDialogueMain);
             String line =null;
-            BufferedReader reader = null;
-            reader = new BufferedReader(new InputStreamReader(is));
+            String answerContent = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             PrintWriter pw = httpServletResponse.getWriter();
             while((line = reader.readLine()) != null) {
-//                line = line + "\n\n";
-                if (StrUtil.isNotBlank(line) && !StrUtil.contains(line, "[DONE]")) {
+
+
+                //首先对行数据进行处理
+                if (StrUtil.isNotBlank(line) ) {
                     line = CollectionUtil.removeEmpty(StrUtil.split(line, "data: ")).get(0);
+                    if (StrUtil.contains(line, "[DONE]")){
+                        String oneWord = catchTextGpt(line);
+                        if (StrUtil.isNotBlank(oneWord)){
+                            answerContent = answerContent+oneWord;
+                        }
+                    }
+                    pw.write(line);
+                    pw.flush();
+                    TimeUnit.MILLISECONDS.sleep(50);
                 }
-                TimeUnit.MILLISECONDS.sleep(100);
-                pw.write(line);
-                pw.flush();
+
+            }
+            //处理完了后将次条聊天记录进行记录
+            if(StrUtil.isNotBlank(answerContent)){
+                //保存聊天记录
+                this.saveTbAnsweEmploy(streamParametersVO,answerContent);
             }
             is.close();
             pw.close();
             reader.close();
         } catch (Exception e) {
-            throw new RuntimeException("询问异常");
+            throw new RuntimeException(e.getMessage());
         } finally {
-            //清楚正在问话的标识
-            redisTemplate.delete(SecurityUtils.getUserId()+"");
+            //解锁
+            redisLock.unlock(lockName);
         }
     }
 
@@ -293,8 +331,7 @@ public class ChatGtpServiceImpl implements IChatGtpService {
                 //首先对行数据进行处理
                 if (StrUtil.isNotBlank(line) ) {
                     line = CollectionUtil.removeEmpty(StrUtil.split(line, "data: ")).get(0);
-                    if (StrUtil.contains(line, "[DONE]")){
-                    }else {
+                    if (!StrUtil.contains(line, "[DONE]")){
                         String oneWord = catchTextGpt(line);
                         if (StrUtil.isNotBlank(oneWord)){
                             answerContent = answerContent+oneWord;
@@ -605,15 +642,7 @@ public class ChatGtpServiceImpl implements IChatGtpService {
 
     @Override
     public void disableWordCheck(String words) {
-        Integer isSensitive = weiXinUtilService.msgCheck(words);
-        //当图片文件内含有敏感内容，则返回87014
-        if (Objects.isNull(isSensitive)) {
-            throw new RuntimeException("违禁词验证失败");
-        } else if (isSensitive == 87014) {
-            throw new RuntimeException("含有违禁词");
-        } else if (isSensitive != 0) {
-            throw new RuntimeException("违禁词错误");
-        }
+        wxCommonUtilService.msgCheck(words);
     }
 
     public String getOpenAiKey() {

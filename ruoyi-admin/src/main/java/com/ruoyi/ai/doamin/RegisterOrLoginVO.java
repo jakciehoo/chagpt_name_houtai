@@ -9,4 +9,7 @@ public class RegisterOrLoginVO {
     private String openid;
     private String nickName;
     private String avatar;
+    private String userName;
+    private String valismsCode;
+    private String passWord;
 }

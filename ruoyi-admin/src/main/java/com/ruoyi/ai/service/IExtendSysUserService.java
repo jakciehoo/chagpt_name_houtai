@@ -1,8 +1,12 @@
 package com.ruoyi.ai.service;
 
+import com.ruoyi.ai.doamin.RegisterOrLoginVO;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 public interface IExtendSysUserService {
@@ -38,4 +42,23 @@ public interface IExtendSysUserService {
     public  SysUser getUserInfo();
     public  Integer updateUserInfo(SysUser sysUser);
     public  Integer updateUserVipType(SysUser sysUser);
+
+    /**
+     * 发送验证码
+     * @param httpServletRequest
+     * @param userName
+     * @param status
+     */
+    public  void sendCmsCode(HttpServletRequest httpServletRequest, String userName, String status);
+
+    /**
+     *校验验证码
+     * @param userName
+     * @param valismsCode
+     * @param status
+     */
+    public  void checkSmsCode(String userName,String valismsCode, String status);
+
+
+    AjaxResult webRegister(RegisterOrLoginVO registerOrLoginVO, HttpSession httpSession);
 }

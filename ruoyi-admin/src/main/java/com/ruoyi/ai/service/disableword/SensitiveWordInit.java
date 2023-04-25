@@ -70,7 +70,7 @@ public class SensitiveWordInit {
         Set<String> wordSet = null;
         String regex_rule = iconfigService.selectConfigByKey("regex_rule");
         if (StrUtil.isNotBlank(regex_rule)){
-            List<String> split = StrUtil.split(regex_rule, ",");
+            List<String> split = StrUtil.split(regex_rule, ',');
             wordSet = split.stream().collect(Collectors.toSet());
         }
         return wordSet;

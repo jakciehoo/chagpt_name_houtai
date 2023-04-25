@@ -8,7 +8,6 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.ai.*;
 import com.ruoyi.ai.doamin.AIVO;
 import com.ruoyi.ai.doamin.ContentVo;
 import com.ruoyi.ai.doamin.Gpt35TurboVO;
@@ -22,6 +21,8 @@ import com.ruoyi.chatgpt.service.ITbAnsweUserService;
 import com.ruoyi.chatgpt.service.ITbKeyManagerService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.json.JsonUtil;
+import com.ruoyi.util.weixin.WxAppUtilService;
+import com.ruoyi.util.weixin.WxCommonUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class ChatGtpController {
     @Autowired
     private IconfigService iconfigService;
     @Autowired
-    private WeiXinUtilService weiXinUtil;
+    private WxCommonUtilService weiXinUtil;
 
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
@@ -52,7 +53,8 @@ public class ChatGtpController {
     private ITbKeyManagerService iTbKeyManagerService;
     @Autowired
     private ITbAnsweUserService iTbAnsweUserService;
-
+    @Autowired
+    private WxAppUtilService wxAppUtilService;
     @PostMapping("/chat")
     public AjaxResult chat(@RequestBody AIVO aivo) {
         //获取是否收录问题
@@ -230,7 +232,7 @@ public class ChatGtpController {
         if (StrUtil.isBlank(tbAnsweUser.getJs_code())) {
             return error("请求参数为空");
         }
-        JSONObject jsonObject = weiXinUtil.getSessionkey(tbAnsweUser.getJs_code());
+        JSONObject jsonObject = wxAppUtilService.getSessionkey(tbAnsweUser.getJs_code());
         String session_key = jsonObject.getStr("session_key");
         String openid = jsonObject.getStr("openid");
         //根据openID去查询,看是否存在该用户

@@ -1,6 +1,5 @@
 package com.ruoyi.ai.controller;
 
-import com.ruoyi.ai.*;
 import com.ruoyi.ai.doamin.SettingVO;
 import com.ruoyi.ai.doamin.UpdateConfigVO;
 import com.ruoyi.ai.service.IChatGtpService;
@@ -10,6 +9,7 @@ import com.ruoyi.chatgpt.service.ITbKeyManagerService;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.service.ISysConfigService;
+import com.ruoyi.util.weixin.WxCommonUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +36,7 @@ public class ChatGtpCommonController {
     @Autowired
     private IChatGtpService iChatGtpService;
     @Autowired
-    private WeiXinUtilService weiXinUtil;
+    private WxCommonUtilService weiXinUtil;
     @Autowired(required = false)
     private RedisTemplate<Object, Object> redisTemplate;
 

@@ -2,6 +2,9 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
+import com.anji.captcha.model.common.ResponseModel;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
 import com.ruoyi.common.enums.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +31,7 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
-
+import org.springframework.context.annotation.Lazy;
 import java.util.Set;
 
 /**
@@ -54,7 +57,9 @@ public class SysLoginService
     @Autowired
     private ISysConfigService configService;
 
-
+    @Autowired
+    @Lazy
+    private CaptchaService captchaService;
     @Autowired
     private SysPermissionService sysPermissionService;
     /**
@@ -63,17 +68,28 @@ public class SysLoginService
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
-     * @param uuid 唯一标识
      * @return 结果
      */
-    public String login(String username, String password, String code, String uuid)
+    public String login(String username, String password, String code)
     {
-        boolean captchaEnabled = configService.selectCaptchaEnabled();
-        // 验证码开关
-        if (captchaEnabled)
+//        boolean captchaEnabled = configService.selectCaptchaEnabled();
+//        // 验证码开关
+//        if (captchaEnabled)
+//        {
+//            validateCaptcha(username, code, uuid);
+//        }
+
+
+        CaptchaVO captchaVO = new CaptchaVO();
+        captchaVO.setCaptchaVerification(code);
+        ResponseModel response = captchaService.verification(captchaVO);
+        if (!response.isSuccess())
         {
-            validateCaptcha(username, code, uuid);
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
+            throw new CaptchaException();
         }
+
+
         // 用户验证
         Authentication authentication = null;
         try
