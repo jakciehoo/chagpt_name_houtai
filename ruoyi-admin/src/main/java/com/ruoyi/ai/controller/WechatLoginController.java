@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @RequestMapping("/authorization/wx")
 @RestController
-public class WeChatLoginController {
+public class WechatLoginController {
     @Autowired
     private IWechatLoginService iWechatLoginService;
     @Autowired
