@@ -2,9 +2,6 @@
 
 ## 后端介绍
 
-* 微信小程序源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_font)
-
-* 后台管理前端源码: [点我进入](https://gitee.com/e0cia/chatgpt_wechat_manager)
 
 小程序需配合此套java程序，下面将详细介绍此套系统的搭建过程谢谢！
 如果前端的话请大家转移的上述的前端链接，获取小程序源码
@@ -19,9 +16,8 @@
 ## 搭建教学
 
 * 首先后端源码下载下来，用idea源码编辑器打开,只需要修改配置文件中的数据库信息（ruoyi-admin/src/main/resources/application-druid.yml）,如果redis设置了密码需要一同改掉
-* 然后直接启动项目即可(有任何我问题可以加入下方QQ群一起交流)
+* 然后直接启动项目即可(有任何我问题可以加入下方群一起交流)
 
-###  **_教程视频_**  : [B站视频教程-小白可搭建](https://space.bilibili.com/342298458/channel/seriesdetail?sid=3077994&ctype=0)（最新视频已经更新,有问题请加群）
 
 
 1.服务器配置
@@ -44,30 +40,27 @@ node.js : https://nodejs.org/en/
 
 
 
-## 交流群
+## 交流微信
 
-QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://qm.qq.com/cgi-bin/qm/qr?k=r9wUrNxH5gX-EdMMdN4cVOt8MyQV2MnL&jump_from=webapi&authKey=UHRma7Iwg1U6UtlS9tWVEfhcU0WaNJuwRW3H1NHNDQjIkIvCpjC/RdNwFaMjxF3W) 
+微信： [![加入QQ群](https://github.com/jakciehoo/chagpt_name/blob/main/image/wechat.JPG?raw=true)](https://github.com/jakciehoo/chagpt_name/blob/main/image/wechat.JPG?raw=true) 
 
 
 ## 小程序演示
 <table>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/gh_35c30216652f_258.jpg"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/mini%20program.jpg?raw=true"/></td>
     </tr>
 </table>
 
 <table>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/1.jpg"/></td>
-        <td><img src="https://image.hongchiqingyun.com/2.jpg"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/1.png?raw=true"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/2.png?raw=true"/></td>
     </tr>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/3.jpg"/></td>
-        <td><img src="https://image.hongchiqingyun.com/4.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://image.hongchiqingyun.com/5.jpg"/></td>
-    </tr>	 
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/3.png?raw=true"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/4.png?raw=true"/></td>
+    </tr> 
  
 </table>
 
@@ -77,12 +70,12 @@ QQ群： [![加入QQ群](https://image.hongchiqingyun.com/qqgroup.jpg)](https://
 ## 后台演示
 <table>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/hou1.png"/></td>
-        <td><img src="https://image.hongchiqingyun.com/hou2.png"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/11.png?raw=true"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/12.png?raw=true"/></td>
     </tr>
     <tr>
-        <td><img src="https://image.hongchiqingyun.com/hou3.png"/></td>
-        <td><img src="https://image.hongchiqingyun.com/hou4.png"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/13.png?raw=trueg"/></td>
+        <td><img src="https://github.com/jakciehoo/chagpt_name/blob/main/image/14.png?raw=true"/></td>
     </tr>
  
 </table>
